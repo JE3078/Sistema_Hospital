@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Sistema_Hospital.Models.ViewModels.MedicoListaVM>
+
+@{
+    ViewData["Title"] = "Personal Médico";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-heart-pulse-fill text-primary me-2"></i>Personal Médico Activo</h2>
+        <a asp-action="Crear" asp-controller="Medico" class="btn btn-primary shadow-sm">
+            <i class="bi bi-person-plus-fill me-1"></i> Agregar Médico
+        </a>
+    </div>
+
+    <div class="alert alert-secondary border-0 bg-light shadow-sm d-flex align-items-center mb-4" role="alert">
+        <i class="bi bi-shield-lock-fill text-secondary fs-4 me-3"></i>
+        <div>
+            <strong class="text-secondary">Capa de Seguridad Activa:</strong> Esta tabla consume la vista cifrada <code class="bg-white px-1 py-0.5 rounded text-danger">Hospitalario.VW_Medicos_Activos</code>. Los hashes de contraseñas y credenciales sensibles están completamente aislados del entorno de presentación web.
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Nombre del Médico</th>
+                            <th>No. Colegiado</th>
+                            <th>Especialidad</th>
+                            <th>Usuario Ligado</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    <i class="bi bi-folder-x fs-3 d-block mb-2"></i>
+                                    No hay médicos registrados o activos en este momento.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 text-muted">#@item.IdMedico</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                                                <i class="bi bi-person-vcard fs-5"></i>
+                                            </div>
+                                            <div>
+                                                <span class="fw-bold d-block text-dark">Dr. @item.NombreCompleto</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border font-monospace">@item.Colegiado</span></td>
+                                    <td>
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">
+                                            @item.Especialidad
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-primary fw-semibold">
+                                            <i class="bi bi-person-fill me-1"></i>@@@item.Username
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <a asp-action="Editar" asp-route-id="@item.IdMedico" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil-square me-1"></i>Perfil
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>  

@@ -1,0 +1,126 @@
+﻿@model Sistema_Hospital.Models.ViewModels.EnfermeroCrearVM
+
+@{
+    ViewData["Title"] = "Agregar Enfermero";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Contratación y Alta de Personal de Enfermería</h5>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Crear" asp-controller="Enfermero" method="post">
+                        <div class="row">
+
+                            <div class="col-md-6 border-end">
+                                <h6 class="text-primary mb-3 fw-bold">
+                                    <i class="bi bi-file-earmark-medical me-2"></i>Información Personal
+                                </h6>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Nombre" class="form-label text-muted fw-semibold">Nombres</label>
+                                        <input asp-for="Nombre" class="form-control" placeholder="Ej. María Elena" required />
+                                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Apellido" class="form-label text-muted fw-semibold">Apellidos</label>
+                                        <input asp-for="Apellido" class="form-control" placeholder="Ej. López Estrada" required />
+                                        <span asp-validation-for="Apellido" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="DPI" class="form-label text-muted fw-semibold">Número de DPI</label>
+                                        <input asp-for="DPI" class="form-control" maxlength="13" placeholder="13 dígitos sin espacios" required />
+                                        <span asp-validation-for="DPI" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Telefono" class="form-label text-muted fw-semibold">Teléfono Celular</label>
+                                        <input asp-for="Telefono" class="form-control" maxlength="8" placeholder="Ej. 55847123" required />
+                                        <span asp-validation-for="Telefono" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Correo" class="form-label text-muted fw-semibold">Correo Electrónico</label>
+                                    <input asp-for="Correo" class="form-control" type="email" placeholder="enfermeria@hospitaldb.com" required />
+                                    <span asp-validation-for="Correo" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="IdGenero" class="form-label text-muted fw-semibold">Género asignado</label>
+                                    <select asp-for="IdGenero" asp-items="Model.Generos" class="form-select" required>
+                                        <option value="">-- Seleccione --</option>
+                                    </select>
+                                    <span asp-validation-for="IdGenero" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ps-4">
+                                <h6 class="text-primary mb-3 fw-bold">
+                                    <i class="bi bi-shield-lock me-2"></i>Cuenta de Acceso para el Enfermero(a)
+                                </h6>
+
+                                <div class="mb-3">
+                                    <label asp-for="Username" class="form-label text-muted fw-semibold">Nombre de Usuario (Username)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                                        <input asp-for="Username" class="form-control" placeholder="Ej. enfermero.lopez" required />
+                                    </div>
+                                    <span asp-validation-for="Username" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Password" class="form-label text-muted fw-semibold">Contraseña Inicial del Sistema</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+                                        <input type="password" asp-for="Password" class="form-control" placeholder="Mínimo 6 caracteres" required />
+                                    </div>
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                </div>
+
+                                <div class="card bg-light border-0 mt-5">
+                                    <div class="card-body p-3">
+                                        <h6 class="text-dark fw-bold mb-1 small"><i class="bi bi-shield-check text-success me-2"></i>Garantía Transaccional ACID</h6>
+                                        <p class="text-muted mb-0" style="font-size: 0.825rem; text-align: justify;">
+                                            Este formulario procesa los datos mediante un bloque transaccional atómico unificado. Si ocurre una colisión en claves no repetibles (como el Username o el DPI), la operación completa se revocará mediante un <code class="bg-white px-1 py-0.5 rounded text-danger">Rollback</code> automático, impidiendo la generación de registros corruptos o usuarios huérfanos en la base de datos de la facultad.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-light border">Cancelar</a>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+                                <i class="bi bi-save me-2"></i>Registrar Enfermero
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

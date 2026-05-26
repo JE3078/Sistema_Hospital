@@ -1,0 +1,75 @@
+﻿@model Sistema_Hospital.Models.ViewModels.UsuarioCrearVM
+
+@{
+    ViewData["Title"] = "Registrar Usuario";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i>Registrar Nuevo Usuario</h5>
+                </div>
+                <div class="card-body p-4">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Crear" asp-controller="Usuario" method="post">
+
+                        <!-- Campo: Nombre de Usuario -->
+                        <div class="mb-3">
+                            <label asp-for="Username" class="form-label text-muted fw-semibold">Nombre de Usuario</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                                <input asp-for="Username" class="form-control" placeholder="Ej. emilio.us" required autofocus />
+                            </div>
+                            <span asp-validation-for="Username" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Campo: Contraseña -->
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label text-muted fw-semibold">Contraseña del Sistema</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Password" class="form-control" placeholder="••••••••" required />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Campo: Selección de Rol (Dropdown Dinámico) -->
+                        <div class="mb-4">
+                            <label asp-for="IdRol" class="form-label text-muted fw-semibold">Rol de Acceso</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="bi bi-shield-lock"></i></span>
+                                <select asp-for="IdRol" asp-items="Model.Roles" class="form-select" required>
+                                    <option value="">-- Seleccione un Rol --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="IdRol" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-light border">Cancelar</a>
+                            <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                                <i class="bi bi-save me-2"></i>Crear Usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

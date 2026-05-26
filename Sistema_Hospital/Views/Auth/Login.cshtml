@@ -1,0 +1,105 @@
+﻿@{
+    Layout = null; // Desactivamos el layout general para que no muestre el menú principal del hospital aquí
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión - HospitalDB</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            height: 100vh;
+        }
+        .login-container {
+            margin-top: 10%;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #0d6efd;
+            border-top-left-radius: 15px !important;
+            border-top-right-radius: 15px !important;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        .btn-primary {
+            border-radius: 8px;
+            padding: 0.6rem;
+            font-weight: 600;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center login-container">
+            <div class="col-md-5">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0"><i class="bi bi-hospital-fill me-2"></i>HospitalDB</h3>
+                        <small class="text-white-50">Sistema Integrado de Gestión Hospitalaria</small>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <h4 class="text-center mb-4 text-secondary">Control de Acceso</h4>
+
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <form asp-action="Login" asp-controller="Auth" method="post">
+
+                            <div class="mb-3">
+                                <label for="username" class="form-label text-muted">Nombre de Usuario</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-person-fill"></i></span>
+                                    <input type="text" id="username" name="username" class="form-control" placeholder="Ej. jsmith" required autofocus />
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label text-muted">Contraseña</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="bi bi-lock-fill"></i></span>
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required />
+                                </div>
+                            </div>
+
+                            <div class="d-grid mb-2">
+                                <button type="submit" class="btn btn-primary btn-block shadow-sm">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar al Sistema
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+                <p class="text-center text-muted mt-4 small">&copy; @DateTime.Now.Year - Facultad de Ingeniería (UPANA)</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
