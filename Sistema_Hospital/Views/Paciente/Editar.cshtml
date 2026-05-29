@@ -1,0 +1,129 @@
+﻿@model Sistema_Hospital.Models.ViewModels.PacienteEditarVM
+
+@{
+    ViewData["Title"] = "Modificar Expediente Clínico";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <div class="card shadow-sm border-0">
+                <!-- Cabecera Warning para indicar modo de Edición -->
+                <div class="card-header bg-warning text-dark py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Modificar Expediente del Paciente: @Model.Nombre @Model.Apellido</h5>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Editar" asp-controller="Paciente" method="post">
+                        <!-- Llave primaria oculta para la persistencia de datos -->
+                        <input type="hidden" asp-for="IdPaciente" />
+
+                        <div class="row">
+
+                            <!-- Columna Izquierda: Información del Paciente -->
+                            <div class="col-md-6 border-end">
+                                <h6 class="text-dark mb-3 fw-bold">
+                                    <i class="bi bi-file-earmark-person me-2"></i>Información de Identidad
+                                </h6>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Nombre" class="form-label text-muted fw-semibold">Nombres</label>
+                                        <input asp-for="Nombre" class="form-control" required />
+                                        <span asp-validation-for="Nombre" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Apellido" class="form-label text-muted fw-semibold">Apellidos</label>
+                                        <input asp-for="Apellido" class="form-control" required />
+                                        <span asp-validation-for="Apellido" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Dpi" class="form-label text-muted fw-semibold">Número de DPI</label>
+                                        <input asp-for="Dpi" class="form-control font-monospace" maxlength="13" required />
+                                        <span asp-validation-for="Dpi" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="FechaNacimiento" class="form-label text-muted fw-semibold">Fecha de Nacimiento</label>
+                                        <input asp-for="FechaNacimiento" class="form-control" type="date" required />
+                                        <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="IdGenero" class="form-label text-muted fw-semibold">Género asignado</label>
+                                    <select asp-for="IdGenero" asp-items="Model.Generos" class="form-select" required></select>
+                                    <span asp-validation-for="IdGenero" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha: Localización y Resguardo de Cambios -->
+                            <div class="col-md-6 ps-4">
+                                <h6 class="text-dark mb-3 fw-bold">
+                                    <i class="bi bi-telephone-fill me-2"></i>Datos de Contacto y Residencia
+                                </h6>
+
+                                <div class="row">
+                                    <div class="col-md-5 mb-3">
+                                        <label asp-for="Telefono" class="form-label text-muted fw-semibold">Teléfono Celular</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted"><i class="bi bi-telephone"></i></span>
+                                            <input asp-for="Telefono" class="form-control" maxlength="8" required />
+                                        </div>
+                                        <span asp-validation-for="Telefono" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-md-7 mb-3">
+                                        <label asp-for="Correo" class="form-label text-muted fw-semibold">Correo Electrónico</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope"></i></span>
+                                            <input asp-for="Correo" class="form-control" type="email" required />
+                                        </div>
+                                        <span asp-validation-for="Correo" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Direccion" class="form-label text-muted fw-semibold">Dirección Habitacional</label>
+                                    <textarea asp-for="Direccion" class="form-control" rows="2" placeholder="Dirección domiciliar completa..."></textarea>
+                                    <span asp-validation-for="Direccion" class="text-danger small"></span>
+                                </div>
+
+                                <!-- Alerta Informativa de Seguridad sobre el DPI y Auditorías -->
+                                <div class="alert alert-warning mt-4 border-0 bg-light text-dark small">
+                                    <i class="bi bi-info-circle-fill text-warning me-2 fs-5"></i>
+                                    <strong>Directiva de Modificación:</strong> Asegúrese de validar que el número de DPI sea correcto antes de guardar. La alteración de este dato auditará los módulos relacionados de <code class="bg-white px-1 py-0.5 rounded text-danger">Citas</code> e <code class="bg-white px-1 py-0.5 rounded text-danger">Ingresos</code> de forma transaccional para evitar inconsistencias en el historial clínico.
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <!-- Botonera de Salida/Guardado -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-light border">Regresar al Listado</a>
+                            <button type="submit" class="btn btn-warning px-5 shadow-sm fw-semibold">
+                                <i class="bi bi-check-circle me-2"></i>Actualizar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -22,9 +22,9 @@ namespace Sistema_Hospital.Servicios
             {
                 var log = new Bitacora
                 {
-                    IdUsuario = idUsuario, // Acepta NULL por si un intento de login falla y no hay ID conocido
+                    IdUsuario = idUsuario,
                     Accion = accion,
-                    FechaHora = DateTime.Now // Registra el timestamp exacto de Guatemala
+                    FechaHora = DateTime.Now
                 };
 
                 _context.Bitacora.Add(log);

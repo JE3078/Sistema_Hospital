@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Hospital.Models;
+using Sistema_Hospital.Models.ViewModels;
 
 namespace Sistema_Hospital.Data;
 
@@ -18,6 +19,7 @@ public partial class HospitalContext : DbContext
 
     public virtual DbSet<Sistema_Hospital.Models.ViewModels.MedicoListaVM> VwMedicosActivos { get; set; }
     public virtual DbSet<Sistema_Hospital.Models.ViewModels.EnfermeroListaVM> VwEnfermerosActivos { get; set; }
+    public virtual DbSet<Sistema_Hospital.Models.ViewModels.PacienteListaVM> VwPacientes {  get; set; }
 
     public virtual DbSet<AreaHospital> AreaHospital { get; set; }
 
@@ -101,6 +103,27 @@ public partial class HospitalContext : DbContext
             entity.Property(e => e.Correo).HasColumnName("Correo");
             entity.Property(e => e.Genero).HasColumnName("Genero");
             entity.Property(e => e.Username).HasColumnName("Username");
+        });
+
+        modelBuilder.Entity<PacienteListaVM>(entity =>
+        {
+            // 1. Indicar que es una entidad sin clave primaria
+            entity.HasNoKey();
+
+            // 2. Mapear explícitamente al esquema y nombre de la Vista en SQL
+            entity.ToView("VW_Paciente", "Hospitalario");
+
+            // 3. Mapeo de propiedades si los nombres de la DB usan guiones bajos
+
+            entity.Property(e => e.IdPaciente);
+            entity.Property(e => e.Nombre);
+            entity.Property(e => e.Apellido);
+            entity.Property(e => e.Dpi);
+            entity.Property(e => e.FechaNacimiento);
+            entity.Property(e => e.Telefono);
+            entity.Property(e => e.Correo);
+            entity.Property(e => e.Genero);
+
         });
 
         modelBuilder.Entity<Bitacora>(entity =>
