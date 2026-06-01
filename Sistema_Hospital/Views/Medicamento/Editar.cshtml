@@ -1,0 +1,98 @@
+﻿@model Sistema_Hospital.Models.Medicamento
+
+@{
+    ViewData["Title"] = "Modificar Medicamento";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Modificar Producto: @Model.Nombre</h5>
+                </div>
+
+                <div class="card-body p-4">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Editar" asp-controller="Medicamento" method="post">
+                        <input type="hidden" asp-for="IdMedicamento" />
+
+                        <div class="row">
+
+                            <div class="col-md-6 border-end">
+                                <h6 class="text-dark mb-3 fw-bold">
+                                    <i class="bi bi-file-earmark-medical me-2"></i>Información Comercial
+                                </h6>
+
+                                <div class="mb-3">
+                                    <label asp-for="Nombre" class="form-label text-muted fw-semibold">Nombre Comercial / Genérico</label>
+                                    <input asp-for="Nombre" class="form-control" required />
+                                    <span asp-validation-for="Nombre" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Descripcion" class="form-label text-muted fw-semibold">Descripción o Presentación</label>
+                                    <textarea asp-for="Descripcion" class="form-control" rows="4" placeholder="Sin descripción disponible"></textarea>
+                                    <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ps-4">
+                                <h6 class="text-dark mb-3 fw-bold">
+                                    <i class="bi bi-boxes me-2"></i>Valores en Existencia y Costo
+                                </h6>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Stock" class="form-label text-muted fw-semibold">Existencias en Stock</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted"><i class="bi bi-hash"></i></span>
+                                            <input asp-for="Stock" type="number" min="0" class="form-control" required />
+                                        </div>
+                                        <span asp-validation-for="Stock" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="Precio" class="form-label text-muted fw-semibold">Precio de Venta</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted">Q</span>
+                                            <input asp-for="Precio" type="number" step="0.01" min="0" class="form-control" required />
+                                        </div>
+                                        <span asp-validation-for="Precio" class="text-danger small"></span>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-warning mt-4 border-0 bg-light text-dark small">
+                                    <i class="bi bi-info-circle-fill text-warning me-2 fs-5"></i>
+                                    <strong>Directiva de Inventario:</strong> Cualquier reajuste manual en el stock o en el precio unitario de venta impactará de forma inmediata en las recetas y prescripciones activas de la base de datos hospitalaria. Esta acción será auditada bajo su usuario administrador de forma automática.
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" asp-controller="Medicamento" class="btn btn-light border">Regresar al Listado</a>
+                            <button type="submit" class="btn btn-warning px-5 shadow-sm fw-semibold">
+                                <i class="bi bi-check-circle me-2"></i>Actualizar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
