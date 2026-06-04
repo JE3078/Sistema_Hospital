@@ -1,0 +1,92 @@
+﻿@model Sistema_Hospital.Models.ViewModels.CitaCrearVM
+
+@{
+    ViewData["Title"] = "Agendar Cita";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><i class="fas fa-calendar-plus text-primary"></i> Agendar Nueva Cita</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-action="Index">Citas</a></li>
+        <li class="breadcrumb-item active">Crear</li>
+    </ol>
+
+    <form asp-action="Crear" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="card card-outline card-primary mb-4">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-clock"></i> Información de la Cita</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 form-group mb-3">
+                        <label asp-for="IdPaciente" class="form-label font-weight-bold">Paciente</label>
+                        <select asp-for="IdPaciente" class="form-control" asp-items="Model.Pacientes">
+                            <option value="">-- Seleccione Paciente --</option>
+                        </select>
+                        <span asp-validation-for="IdPaciente" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 form-group mb-3">
+                        <label asp-for="IdMedico" class="form-label font-weight-bold">Médico Tratante</label>
+                        <select asp-for="IdMedico" class="form-control" asp-items="Model.Medicos">
+                            <option value="">-- Seleccione Médico --</option>
+                        </select>
+                        <span asp-validation-for="IdMedico" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 form-group mb-3">
+                        <label asp-for="FechaHora" class="form-label font-weight-bold">Fecha y Hora</label>
+                        <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="FechaHora" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 form-group mb-3">
+                        <label asp-for="IdEstado" class="form-label font-weight-bold">Estado Inicial</label>
+                        <select asp-for="IdEstado" class="form-control" asp-items="Model.Estados">
+                            <option value="">-- Seleccione Estado --</option>
+                        </select>
+                        <span asp-validation-for="IdEstado" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Motivo" class="form-label font-weight-bold">Motivo de la Consulta / Síntomas</label>
+                    <textarea asp-for="Motivo" class="form-control" rows="2" placeholder="Ej. Dolor de cabeza persistente y fiebre..."></textarea>
+                    <span asp-validation-for="Motivo" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-outline card-success mb-4">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h3 class="card-title mb-0"><i class="fas fa-stethoscope"></i> Información del Diagnóstico (Opcional)</h3>
+
+                <button type="button" class="btn btn-info btn-sm ml-auto" data-toggle="modal" data-target="#modalPrescripcion">
+                    <i class="fas fa-capsules"></i> Agregar Prescripción / Receta
+                </button>
+            </div>
+            <div class="card-body">
+                <partial name="~/Views/Diagnostico/_Crear.cshtml" for="Diagnostico" />
+            </div>
+        </div>
+
+        <partial name="~/Views/Prescripcion/_Crear.cshtml" for="Prescripcion" />
+
+        <div class="mt-4 mb-5">
+            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+                <i class="fas fa-save"></i> Agendar y Guardar Expediente
+            </button>
+            <a asp-action="Index" class="btn btn-secondary btn-lg shadow-sm ml-2">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Sistema_Hospital.Models.ViewModels.CitaListaVM>
+
+@{
+    ViewData["Title"] = "Control de Citas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-calendar-check-fill text-primary me-2"></i>Agenda de Citas Médicas</h2>
+        <a asp-action="Crear" asp-controller="Cita" class="btn btn-primary shadow-sm">
+            <i class="bi bi-calendar-plus me-1"></i> Agendar Nueva Cita
+        </a>
+    </div>
+
+    <div class="alert alert-secondary border-0 bg-light shadow-sm d-flex align-items-center mb-4" role="alert">
+        <i class="bi bi-shield-lock-fill text-secondary fs-4 me-3"></i>
+        <div>
+            <strong class="text-secondary">Seguridad y Control de Accesos:</strong> Los médicos en sesión únicamente pueden visualizar su respectiva agenda asignada. Las modificaciones o cancelaciones extemporáneas quedan registradas de manera estricta en la bitácora del sistema.
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Paciente</th>
+                            <th>Médico Asignado</th>
+                            <th>Fecha y Hora</th>
+                            <th>Motivo de Consulta</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
+                                    No se encontraron citas programadas en este momento.
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 text-muted">#@item.IdCita</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2">
+                                                <i class="bi bi-person-fill fs-6"></i>
+                                            </div>
+                                            <span class="fw-bold text-dark">@item.NombrePaciente</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="text-secondary fw-semibold"><i class="bi bi-heart-pulse me-1"></i>@item.NombreMedico</span></td>
+                                    <td>
+                                        <span class="fw-medium text-dark">
+                                            <i class="bi bi-clock me-1 text-muted"></i> @item.FechaHora.ToString("dd/MM/yyyy HH:mm")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted d-inline-block text-truncate" style="max-width: 200px;" title="@item.Motivo">
+                                            @item.Motivo
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <a asp-action="Editar" asp-route-id="@item.IdCita" class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil-square me-1"></i>Gestionar
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

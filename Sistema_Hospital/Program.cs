@@ -18,6 +18,8 @@ builder.Services.AddScoped<IMedicoService, MedicoService>();
 builder.Services.AddScoped<IEnfermeroService, EnfermeroService>();
 builder.Services.AddScoped<IPacienteService, PacienteService>();
 builder.Services.AddScoped<IMedicamentoService,  MedicamentoService>();
+builder.Services.AddScoped<ICitaService, CitaService>();
+builder.Services.AddScoped<IDiagnosticoService, DiagnosticoService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
