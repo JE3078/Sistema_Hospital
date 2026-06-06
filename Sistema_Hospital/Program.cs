@@ -20,6 +20,7 @@ builder.Services.AddScoped<IPacienteService, PacienteService>();
 builder.Services.AddScoped<IMedicamentoService,  MedicamentoService>();
 builder.Services.AddScoped<ICitaService, CitaService>();
 builder.Services.AddScoped<IDiagnosticoService, DiagnosticoService>();
+builder.Services.AddScoped<ICargaMasivaService, CargaMasivaService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

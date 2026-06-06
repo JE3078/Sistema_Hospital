@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "Carga Masiva de Medicamentos (ETL)";
+
+    var cargados = TempData["RegistrosCargados"];
+    var omitidos = TempData["RegistrosOmitidos"];
+    var erroresRaw = TempData["Errores"]?.ToString();
+    var errores = string.IsNullOrEmpty(erroresRaw)
+        ? new List<string>()
+        : erroresRaw.Split('|').Where(e => !string.IsNullOrWhiteSpace(e)).ToList();
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-file-earmark-excel text-success me-2"></i>Carga Masiva de Medicamentos (ETL)</h2>
+        <a asp-action="Index" asp-controller="Medicamento" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Inventario
+        </a>
+    </div>
+
+    @* ── Resultado exitoso ── *@
+    @if (cargados != null)
+    {
+        <div class="alert alert-success border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+            <div>
+                <strong>Carga completada exitosamente.</strong><br />
+                <span>Registros insertados: <strong>@cargados</strong> &nbsp;|&nbsp; Omitidos (duplicados): <strong>@omitidos</strong></span>
+            </div>
+        </div>
+    }
+
+    @* ── Error general ── *@
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-x-circle-fill fs-4 me-3"></i>
+            <div>@TempData["Error"]</div>
+        </div>
+    }
+
+    @* ── Advertencias por fila ── *@
+    @if (errores.Any())
+    {
+        <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+                <strong>Se encontraron advertencias durante la carga:</strong>
+            </div>
+            <ul class="mb-0 ps-4">
+                @foreach (var e in errores)
+                {
+                    <li><small>@e</small></li>
+                }
+            </ul>
+        </div>
+    }
+
+    @* ── Card principal de carga ── *@
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-upload me-2"></i>Seleccionar archivo Excel
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">
+                El archivo debe tener exactamente este encabezado:
+            </p>
+            <div class="bg-light border rounded p-3 mb-4 font-monospace small">
+                <div class="text-muted">Nombre,Descripcion,Stock,Precio</div>
+                <div>Paracetamol 500mg,Analgésico y antipirético para dolor leve,150,12.50</div>
+            </div>
+
+            <form asp-action="CargarMedicamentos" asp-controller="CargaMasiva"
+                  method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Archivo Excel de medicamentos</label>
+                    <input type="file" name="archivo" class="form-control" accept=".xlsx" required />
+                    <div class="form-text">Solo se aceptan archivos <strong>.xlsx</strong>.</div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-cloud-upload-fill me-1"></i> Iniciar carga
+                    </button>
+                    <a asp-action="Index" asp-controller="Medicamento" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @* ── Formato de columnas ── *@
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <i class="bi bi-table me-2"></i>Formato requerido del archivo
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-3">Columna A — Nombre</th>
+                            <th>Columna B — Descripcion</th>
+                            <th>Columna C — Stock</th>
+                            <th>Columna D — Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-3">Paracetamol 500mg</td>
+                            <td>Analgésico y antipirético para dolor leve</td>
+                            <td>150</td>
+                            <td>12.50</td>
+                        </tr>
+                        <tr class="table-light">
+                            <td class="ps-3">Amoxicilina 500mg</td>
+                            <td>Antibiótico de amplio espectro</td>
+                            <td>80</td>
+                            <td>35.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Los medicamentos con nombre ya existente en la base de datos serán omitidos automáticamente sin generar error.
+                    El campo <strong>ID_Medicamento</strong> es generado automáticamente por el sistema.
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
