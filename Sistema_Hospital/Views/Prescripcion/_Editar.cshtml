@@ -1,15 +1,13 @@
 ﻿@model Sistema_Hospital.Models.ViewModels.PrescripcionEditarVM
 
-<div class="modal fade" id="modalPrescripcion" tabindex="-1" role="dialog" aria-labelledby="modalPrescripcionLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="modalPrescripcion" tabindex="-1" aria-labelledby="modalPrescripcionLabel">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
                 <h5 class="modal-title" id="modalPrescripcionLabel">
                     <i class="fas fa-pills"></i> Modificar Receta Médica
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
@@ -18,8 +16,10 @@
 
                 <div class="form-group mb-3">
                     <label asp-for="IdMedicamento" class="form-label font-weight-bold">Medicamento</label>
-                    <select name="Prescripcion.IdMedicamento" class="form-control" asp-items="Model.Medicamentos">
-                        <option value="0">-- Seleccione Medicamento --</option>
+                    <select asp-for="IdMedicamento"
+                            class="form-control form-select"
+                            asp-items="Model.Medicamentos">
+                        <option value="">-- Seleccione Medicamento --</option>
                     </select>
                     <span asp-validation-for="IdMedicamento" class="text-danger"></span>
                 </div>
@@ -50,10 +50,10 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnAceptarPrescripcion">
                     <i class="fas fa-save"></i> Guardar Cambios de Receta
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCancelarPrescripcion">Cerrar</button>
             </div>
         </div>
     </div>

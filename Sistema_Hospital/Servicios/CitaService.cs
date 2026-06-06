@@ -73,57 +73,59 @@ namespace Sistema_Hospital.Servicios
         }
         public async Task<bool> RegistrarCita(CitaCrearVM model)
         {
-            using var transaction = await context.Database.BeginTransactionAsync();
-            try
+            using (var transaction = await context.Database.BeginTransactionAsync())
             {
-                // A. Cita
-                var nuevaCita = new Cita
+                try
                 {
-                    Motivo = model.Motivo,
-                    FechaHora = model.FechaHora,
-                    IdPaciente = model.IdPaciente,
-                    IdMedico = model.IdMedico,
-                    IdEstado = model.IdEstado
-                };
-                context.Cita.Add(nuevaCita);
-                await context.SaveChangesAsync();
-
-                // B. Diagnóstico
-                if (model.Diagnostico != null && !string.IsNullOrWhiteSpace(model.Diagnostico.Descripcion))
-                {
-                    var nuevoDiagnostico = new Diagnostico
+                    // 1. Guardar la Cita de forma obligatoria
+                    var citaEntity = new Cita
                     {
-                        IdCita = nuevaCita.IdCita,
-                        Descripcion = model.Diagnostico.Descripcion,
-                        Observaciones = model.Diagnostico.Observaciones
+                        IdPaciente = model.IdPaciente,
+                        IdMedico = model.IdMedico,
+                        FechaHora = model.FechaHora,
+                        IdEstado = model.IdEstado,
+                        Motivo = model.Motivo
                     };
-                    context.Diagnosticos.Add(nuevoDiagnostico);
-                    await context.SaveChangesAsync(); // Genera ID_Diagnostico
+                    context.Cita.Add(citaEntity);
+                    await context.SaveChangesAsync(); // Genera el IdCita
 
-                    // C. Prescripción (Requiere que exista el diagnóstico)
-                    if (model.Prescripcion != null && model.Prescripcion.IdMedicamento > 0)
+                    // 2. Guardar el Diagnóstico SOLO si el controlador no lo envió nulo
+                    if (model.Diagnostico != null)
                     {
-                        var nuevaPrescripcion = new Prescripcion
+                        var diagnosticoEntity = new Diagnostico
                         {
-                            IdDiagnostico = nuevoDiagnostico.IdDiagnostico,
-                            IdMedicamento = model.Prescripcion.IdMedicamento,
-                            Dosis = model.Prescripcion.Dosis,
-                            Frecuencia = model.Prescripcion.Frecuencia,
-                            Duracion = model.Prescripcion.Duracion,
-                            Instrucciones = model.Prescripcion.Instrucciones
+                            IdCita = citaEntity.IdCita, // Amarre de llave foránea
+                            Descripcion = model.Diagnostico.Descripcion,
+                            Observaciones = model.Diagnostico.Observaciones
                         };
-                        context.Prescripciones.Add(nuevaPrescripcion);
-                    }
-                }
+                        context.Diagnosticos.Add(diagnosticoEntity);
+                        await context.SaveChangesAsync(); // Genera el IdDiagnostico
 
-                await context.SaveChangesAsync();
-                await transaction.CommitAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                await transaction.RollbackAsync();
-                return false;
+                        // 3. Guardar la Prescripción SOLO si se mandó una y existe un diagnóstico previo
+                        if (model.Prescripcion != null)
+                        {
+                            var prescripcionEntity = new Prescripcion
+                            {
+                                IdDiagnostico = diagnosticoEntity.IdDiagnostico, // Amarre
+                                IdMedicamento = model.Prescripcion.IdMedicamento,
+                                Dosis = model.Prescripcion.Dosis,
+                                Frecuencia = model.Prescripcion.Frecuencia,
+                                Duracion = model.Prescripcion.Duracion,
+                                Instrucciones = model.Prescripcion.Instrucciones
+                            };
+                            context.Prescripciones.Add(prescripcionEntity);
+                            await context.SaveChangesAsync();
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    return false;
+                }
             }
         }
         public async Task<CitaEditarVM?> ObtenerCitaParaEditar(int idCita)
@@ -175,10 +177,11 @@ namespace Sistema_Hospital.Servicios
 
         public async Task<bool> ActualizarCita(CitaEditarVM model)
         {
+            // CUMPLIMIENTO MÓDULO 5: Garantía de Transaccionalidad Atómica (ACID)
             using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
-                // 1. Cita
+                // 1. ACTUALIZACIÓN DE LA CITA BASE
                 var cita = await context.Cita.FirstOrDefaultAsync(c => c.IdCita == model.IdCita);
                 if (cita == null) return false;
 
@@ -187,9 +190,10 @@ namespace Sistema_Hospital.Servicios
                 cita.IdEstado = model.IdEstado;
                 cita.FechaHora = model.FechaHora;
                 cita.Motivo = model.Motivo;
+
                 context.Cita.Update(cita);
 
-                // 2. Diagnóstico
+                // 2. PROCESAMIENTO DEL DIAGNÓSTICO INTEGRADO
                 if (model.Diagnostico != null && !string.IsNullOrWhiteSpace(model.Diagnostico.Descripcion))
                 {
                     var diagnosticoExistente = await context.Diagnosticos
@@ -199,44 +203,50 @@ namespace Sistema_Hospital.Servicios
 
                     if (diagnosticoExistente != null)
                     {
+                        // ESCENARIO A: El diagnóstico ya existía, actualizamos sus propiedades
                         diagnosticoExistente.Descripcion = model.Diagnostico.Descripcion;
                         diagnosticoExistente.Observaciones = model.Diagnostico.Observaciones;
+
                         context.Diagnosticos.Update(diagnosticoExistente);
-                        await context.SaveChangesAsync();
+                        await context.SaveChangesAsync(); // Persistencia intermedia obligatoria para asegurar el ID relacional
                         idDiagnosticoActual = diagnosticoExistente.IdDiagnostico;
                     }
                     else
                     {
+                        // ESCENARIO B: No existía diagnóstico previo (Se añade por primera vez en Edición)
                         var nuevoDiagnostico = new Diagnostico
                         {
                             IdCita = model.IdCita,
                             Descripcion = model.Diagnostico.Descripcion,
                             Observaciones = model.Diagnostico.Observaciones
                         };
+
                         context.Diagnosticos.Add(nuevoDiagnostico);
-                        await context.SaveChangesAsync(); // Guardado intermedio para obtener el ID
+                        await context.SaveChangesAsync(); // Persistencia intermedia obligatoria para capturar el IDENTITY de SQL Server
                         idDiagnosticoActual = nuevoDiagnostico.IdDiagnostico;
                     }
 
-                    // 3. Prescripción
+                    // 3. PROCESAMIENTO DE LA PRESCRIPCIÓN / RECETA MÉDICA
                     if (model.Prescripcion != null && model.Prescripcion.IdMedicamento > 0)
                     {
+                        // CORRECCIÓN: Uso del set correcto 'Prescripcions' según la metadata del modelo de EF
                         var prescripcionExistente = await context.Prescripciones
                             .FirstOrDefaultAsync(p => p.IdDiagnostico == idDiagnosticoActual);
 
                         if (prescripcionExistente != null)
                         {
-                            // YA EXISTÍA RECETA: Actualizamos
+                            // YA EXISTÍA LA RECETA: Modificamos los valores actuales
                             prescripcionExistente.IdMedicamento = model.Prescripcion.IdMedicamento;
                             prescripcionExistente.Dosis = model.Prescripcion.Dosis;
                             prescripcionExistente.Frecuencia = model.Prescripcion.Frecuencia;
                             prescripcionExistente.Duracion = model.Prescripcion.Duracion;
                             prescripcionExistente.Instrucciones = model.Prescripcion.Instrucciones;
+
                             context.Prescripciones.Update(prescripcionExistente);
                         }
                         else
                         {
-                            // NUEVA RECETA: Insertamos
+                            // NUEVA RECETA: Insertamos la relación ligada al ID del diagnóstico actual
                             var nuevaPrescripcion = new Prescripcion
                             {
                                 IdDiagnostico = idDiagnosticoActual,
@@ -246,17 +256,22 @@ namespace Sistema_Hospital.Servicios
                                 Duracion = model.Prescripcion.Duracion,
                                 Instrucciones = model.Prescripcion.Instrucciones
                             };
+
                             context.Prescripciones.Add(nuevaPrescripcion);
                         }
                     }
                 }
 
+                // Guardado global y definitivo de todas las entidades modificadas/añadidas
                 await context.SaveChangesAsync();
+
+                // Consolidación de los cambios de forma permanente en SQL Server
                 await transaction.CommitAsync();
                 return true;
             }
             catch (Exception)
             {
+                // Si ocurre cualquier colisión o fallo en las llaves foráneas se revoca todo (Rollback automático)
                 await transaction.RollbackAsync();
                 return false;
             }

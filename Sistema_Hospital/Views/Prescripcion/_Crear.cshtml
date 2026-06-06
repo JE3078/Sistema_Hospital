@@ -1,15 +1,13 @@
 ﻿@model Sistema_Hospital.Models.ViewModels.PrescripcionCrearVM
 
-<div class="modal fade" id="modalPrescripcion" tabindex="-1" role="dialog" aria-labelledby="modalPrescripcionLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="modalPrescripcion" tabindex="-1" aria-labelledby="modalPrescripcionLabel">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
                 <h5 class="modal-title" id="modalPrescripcionLabel">
                     <i class="fas fa-pills"></i> Agregar Receta Médica / Prescripción
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
@@ -47,10 +45,10 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnAceptarPrescripcion">
                     <i class="fas fa-check"></i> Aceptar Prescripción
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCancelarPrescripcion">Cancelar</button>
             </div>
         </div>
     </div>

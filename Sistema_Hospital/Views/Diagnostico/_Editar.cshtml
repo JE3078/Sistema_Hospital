@@ -1,23 +1,16 @@
 ﻿@model Sistema_Hospital.Models.ViewModels.DiagnosticoEditarVM
 
-<div class="card card-outline card-warning mt-4">
-    <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-user-md"></i> Diagnóstico Médico</h3>
-    </div>
-    <div class="card-body">
-        <input type="hidden" name="Diagnostico.IdDiagnostico" value="@Model.IdDiagnostico" />
-        <input type="hidden" name="Diagnostico.IdCita" value="@Model.IdCita" />
+<input type="hidden" name="Diagnostico.IdDiagnostico" value="@Model.IdDiagnostico" />
+<input type="hidden" name="Diagnostico.IdCita" value="@Model.IdCita" />
 
-        <div class="form-group mb-3">
-            <label asp-for="Descripcion" class="form-label font-weight-bold"></label>
-            <input asp-for="Descripcion" name="Diagnostico.Descripcion" class="form-control" />
-            <span asp-validation-for="Descripcion" class="text-danger"></span>
-        </div>
+<div class="form-group mb-3">
+    <label asp-for="Descripcion" class="form-label font-weight-bold">Descripción del Diagnóstico</label>
+    <input asp-for="Descripcion" name="Diagnostico.Descripcion" value="@Model.Descripcion" class="form-control" />
+    <span asp-validation-for="Descripcion" class="text-danger"></span>
+</div>
 
-        <div class="form-group mb-3">
-            <label asp-for="Observaciones" class="form-label font-weight-bold"></label>
-            <textarea asp-for="Observaciones" name="Diagnostico.Observaciones" class="form-control" rows="3">@Model.Observaciones</textarea>
-            <span asp-validation-for="Observaciones" class="text-danger"></span>
-        </div>
-    </div>
+<div class="form-group mb-3">
+    <label asp-for="Observaciones" class="form-label font-weight-bold">Observaciones y Reposos</label>
+    <textarea asp-for="Observaciones" name="Diagnostico.Observaciones" class="form-control" rows="3">@Model.Observaciones</textarea>
+    <span asp-validation-for="Observaciones" class="text-danger"></span>
 </div>
