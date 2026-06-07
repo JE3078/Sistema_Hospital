@@ -2,6 +2,8 @@
 using Sistema_Hospital.Data;
 using Sistema_Hospital.Models;
 using Sistema_Hospital.Models.ViewModels;
+using System.Security.Cryptography; // <-- Requerido para AES
+using System.Text;
 
 namespace Sistema_Hospital.Servicios
 {
@@ -17,6 +19,11 @@ namespace Sistema_Hospital.Servicios
     {
         private readonly HospitalContext _context;
 
+        // Configuración de cifrado local en la clase
+        // IMPORTANTE: Cambia esta clave por una de 32 caracteres y ponla idealmente en appsettings.json en producción
+        private readonly byte[] _claveAes = Encoding.UTF8.GetBytes("TuClaveSuperSecretaDe32Bytes123!".PadRight(32).Substring(0, 32));
+        private readonly byte[] _ivAes = new byte[16]; // Vector de inicialización fijo para consistencia
+
         public MedicoService(HospitalContext context)
         {
             _context = context;
@@ -26,51 +33,49 @@ namespace Sistema_Hospital.Servicios
         {
             return await _context.VwMedicosActivos.ToListAsync();
         }
+
         public async Task<bool> RegistrarMedico(MedicoCrearVM model)
         {
-            // CUMPLIMIENTO MÓDULO 5: Transacción ACID con EF Core
             using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-                // Paso 1: Insertar la Cuenta de Usuario en [Administracion].[Usuario_Sistema]
+                // Paso 1: Insertar la Cuenta de Usuario
                 var nuevoUsuario = new UsuarioSistema
                 {
                     Username = model.Username,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password), // Hashing seguro BCrypt
-                    IdRol = 2, // Rol ID fijo para Médico
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.Password),
+                    IdRol = 2,
                     Estado = true
                 };
 
                 _context.UsuarioSistemas.Add(nuevoUsuario);
-                await _context.SaveChangesAsync(); // SQL Server genera e inyecta el ID_Usuario aquí
+                await _context.SaveChangesAsync();
 
-                // Paso 2: Insertar los Datos Clínicos en [Hospitalario].[Medico]
+                // Paso 2: Insertar los Datos Clínicos (CIFRANDO EL DPI LOCALMENTE)
                 var nuevoMedico = new Medico
                 {
                     Nombre = model.Nombre,
                     Apellido = model.Apellido,
-                    Dpi = model.DPI,
+                    Dpi = CifrarTexto(model.DPI), // <-- Llama al método privado de la clase
                     Colegiado = model.Colegiado,
-                    FechaNacimiento = DateOnly.FromDateTime(model.FechaNacimiento), // Mapeado a [date] de SQL
+                    FechaNacimiento = DateOnly.FromDateTime(model.FechaNacimiento),
                     Telefono = model.Telefono,
                     Correo = model.Correo,
                     IdGenero = model.IdGenero,
                     IdEspecialidad = model.IdEspecialidad,
                     Direccion = model.Direccion,
-                    IdUsuario = nuevoUsuario.IdUsuario // Vinculamos la FK con el ID recién generado
+                    IdUsuario = nuevoUsuario.IdUsuario
                 };
 
                 _context.Medicos.Add(nuevoMedico);
                 await _context.SaveChangesAsync();
 
-                // Si ambos pasos fueron exitosos, consolidamos la operación en SQL Server
                 await transaction.CommitAsync();
                 return true;
             }
             catch (Exception)
             {
-                // Si algo falla (ej. violación de restricción UNIQUE en DPI o Username), se deshace todo
                 await transaction.RollbackAsync();
                 return false;
             }
@@ -78,22 +83,20 @@ namespace Sistema_Hospital.Servicios
 
         public async Task<MedicoEditarVM?> ObtenerMedicoParaEditar(int idMedico)
         {
-            // Buscamos el médico incluyendo su relación con el Usuario del sistema
             var medico = await _context.Medicos
-                .Include(m => m.IdUsuarioNavigation) // Ajusta el nombre de la propiedad de navegación si varía en tu DbContext
+                .Include(m => m.IdUsuarioNavigation)
                 .FirstOrDefaultAsync(m => m.IdMedico == idMedico);
 
             if (medico == null) return null;
 
-            // Convertimos la entidad física al ViewModel de edición
             return new MedicoEditarVM
             {
                 IdMedico = medico.IdMedico,
                 Nombre = medico.Nombre,
                 Apellido = medico.Apellido,
-                DPI = medico.Dpi,
+                DPI = DescifrarTexto(medico.Dpi), // <-- Llama al método privado para descifrar el DPI
                 Colegiado = medico.Colegiado,
-                FechaNacimiento = medico.FechaNacimiento.ToDateTime(TimeOnly.MinValue), // Conversión de DateOnly a DateTime
+                FechaNacimiento = medico.FechaNacimiento.ToDateTime(TimeOnly.MinValue),
                 Telefono = medico.Telefono,
                 Correo = medico.Correo,
                 IdGenero = medico.IdGenero,
@@ -108,17 +111,16 @@ namespace Sistema_Hospital.Servicios
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // 1. Obtener el registro del médico de la BD
                 var medico = await _context.Medicos
                     .Include(m => m.IdUsuarioNavigation)
                     .FirstOrDefaultAsync(m => m.IdMedico == model.IdMedico);
 
                 if (medico == null) return false;
 
-                // 2. Actualizar datos de la Ficha Médica
+                // Actualizar datos de la Ficha Médica
                 medico.Nombre = model.Nombre;
                 medico.Apellido = model.Apellido;
-                medico.Dpi = model.DPI;
+                medico.Dpi = CifrarTexto(model.DPI); // <-- Cifra el DPI editado
                 medico.Colegiado = model.Colegiado;
                 medico.FechaNacimiento = DateOnly.FromDateTime(model.FechaNacimiento);
                 medico.Telefono = model.Telefono;
@@ -127,7 +129,7 @@ namespace Sistema_Hospital.Servicios
                 medico.IdEspecialidad = model.IdEspecialidad;
                 medico.Direccion = model.Direccion;
 
-                // 3. Actualizar contraseña del Usuario (Solo si el administrador escribió una nueva)
+                // Actualizar contraseña del Usuario
                 if (!string.IsNullOrEmpty(model.NuevaPassword) && medico.IdUsuarioNavigation != null)
                 {
                     medico.IdUsuarioNavigation.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.NuevaPassword);
@@ -144,6 +146,56 @@ namespace Sistema_Hospital.Servicios
             {
                 await transaction.RollbackAsync();
                 return false;
+            }
+        }
+
+        // ==========================================
+        // MÉTODOS PRIVADOS DE CIFRADO (AES-256)
+        // ==========================================
+
+        private string CifrarTexto(string textoPlano)
+        {
+            if (string.IsNullOrEmpty(textoPlano)) return textoPlano;
+
+            using Aes aes = Aes.Create();
+            aes.Key = _claveAes;
+            aes.IV = _ivAes;
+
+            ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+            using MemoryStream ms = new MemoryStream();
+            using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+            {
+                using (StreamWriter sw = new StreamWriter(cs))
+                {
+                    sw.Write(textoPlano);
+                }
+            }
+            return Convert.ToBase64String(ms.ToArray());
+        }
+
+        private string DescifrarTexto(string textoCifrado)
+        {
+            if (string.IsNullOrEmpty(textoCifrado)) return textoCifrado;
+
+            try
+            {
+                using Aes aes = Aes.Create();
+                aes.Key = _claveAes;
+                aes.IV = _ivAes;
+
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using MemoryStream ms = new MemoryStream(Convert.FromBase64String(textoCifrado));
+                using CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
+                using StreamReader sr = new StreamReader(cs);
+
+                return sr.ReadToEnd();
+            }
+            catch
+            {
+                // Retorna el valor original si falla (útil si hay registros viejos sin cifrar)
+                return textoCifrado;
             }
         }
     }

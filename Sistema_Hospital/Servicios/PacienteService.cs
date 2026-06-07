@@ -2,6 +2,7 @@
 using Sistema_Hospital.Data;
 using Sistema_Hospital.Models;
 using Sistema_Hospital.Models.ViewModels;
+using System.Security.Cryptography;
 
 namespace Sistema_Hospital.Servicios
 {
@@ -32,11 +33,33 @@ namespace Sistema_Hospital.Servicios
 
             try
             {
+                // --- LÓGICA DE CIFRADO SIMÉTRICO LOCAL ---
+                string dpiCifrado = model.Dpi;
+                if (!string.IsNullOrEmpty(model.Dpi))
+                {
+                    using Aes aes = Aes.Create();
+                    // Clave de 32 bytes y IV de 16 bytes fijos para consistencia
+                    aes.Key = System.Text.Encoding.UTF8.GetBytes("TuClaveSuperSecretaDe32Bytes123!".PadRight(32).Substring(0, 32));
+                    aes.IV = new byte[16];
+
+                    ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+                    using MemoryStream ms = new MemoryStream();
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter sw = new StreamWriter(cs))
+                        {
+                            sw.Write(model.Dpi);
+                        }
+                    }
+                    dpiCifrado = Convert.ToBase64String(ms.ToArray());
+                }
+                // ----------------------------------------
+
                 var nuevoPaciente = new Paciente
                 {
                     Nombre = model.Nombre,
                     Apellido = model.Apellido,
-                    Dpi = model.Dpi,
+                    Dpi = dpiCifrado, // <-- Guardamos el DPI cifrado
                     FechaNacimiento = model.FechaNacimiento,
                     Telefono = model.Telefono,
                     Correo = model.Correo,
@@ -61,16 +84,41 @@ namespace Sistema_Hospital.Servicios
         {
             // Buscamos el médico incluyendo su relación con el Usuario del sistema
             var paciente = await _context.Pacientes
-                .FirstOrDefaultAsync(p => p.IdPaciente== idPaciente);
+                .FirstOrDefaultAsync(p => p.IdPaciente == idPaciente);
 
             if (paciente == null) return null;
+
+            // --- LÓGICA DE DESCIFRADO SIMÉTRICO LOCAL ---
+            string dpiDescifrado = paciente.Dpi;
+            if (!string.IsNullOrEmpty(paciente.Dpi))
+            {
+                try
+                {
+                    using Aes aes = Aes.Create();
+                    aes.Key = System.Text.Encoding.UTF8.GetBytes("TuClaveSuperSecretaDe32Bytes123!".PadRight(32).Substring(0, 32));
+                    aes.IV = new byte[16];
+
+                    ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+                    using MemoryStream ms = new MemoryStream(Convert.FromBase64String(paciente.Dpi));
+                    using CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
+                    using StreamReader sr = new StreamReader(cs);
+
+                    dpiDescifrado = sr.ReadToEnd();
+                }
+                catch
+                {
+                    // Si falla (por si hay datos viejos en la BD sin cifrar), mantiene el valor original
+                    dpiDescifrado = paciente.Dpi;
+                }
+            }
+            // --------------------------------------------
 
             return new PacienteEditarVM
             {
                 IdPaciente = paciente.IdPaciente,
                 Nombre = paciente.Nombre,
                 Apellido = paciente.Apellido,
-                Dpi = paciente.Dpi,
+                Dpi = dpiDescifrado, // <-- Enviamos el DPI descifrado a la vista
                 FechaNacimiento = paciente.FechaNacimiento,
                 Telefono = paciente.Telefono,
                 Correo = paciente.Correo,
@@ -89,11 +137,32 @@ namespace Sistema_Hospital.Servicios
                 var paciente = await _context.Pacientes
                     .FirstOrDefaultAsync(p => p.IdPaciente == model.IdPaciente);
 
-                if(paciente == null) return false;
+                if (paciente == null) return false;
+
+                // --- LÓGICA DE CIFRADO SIMÉTRICO LOCAL ---
+                string dpiCifrado = model.Dpi;
+                if (!string.IsNullOrEmpty(model.Dpi))
+                {
+                    using Aes aes = Aes.Create();
+                    aes.Key = System.Text.Encoding.UTF8.GetBytes("TuClaveSuperSecretaDe32Bytes123!".PadRight(32).Substring(0, 32));
+                    aes.IV = new byte[16];
+
+                    ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+                    using MemoryStream ms = new MemoryStream();
+                    using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter sw = new StreamWriter(cs))
+                        {
+                            sw.Write(model.Dpi);
+                        }
+                    }
+                    dpiCifrado = Convert.ToBase64String(ms.ToArray());
+                }
+                // ----------------------------------------
 
                 paciente.Nombre = model.Nombre;
                 paciente.Apellido = model.Apellido;
-                paciente.Dpi = model.Dpi;
+                paciente.Dpi = dpiCifrado; // <-- Guardamos el nuevo DPI cifrado
                 paciente.FechaNacimiento = model.FechaNacimiento;
                 paciente.Telefono = model.Telefono;
                 paciente.Correo = model.Correo;
@@ -104,7 +173,7 @@ namespace Sistema_Hospital.Servicios
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
-            }
+            }   
             catch (Exception)
             {
                 await transaction.RollbackAsync();
