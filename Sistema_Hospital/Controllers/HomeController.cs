@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sistema_Hospital.Models;
 
 namespace Sistema_Hospital.Controllers
 {
+[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

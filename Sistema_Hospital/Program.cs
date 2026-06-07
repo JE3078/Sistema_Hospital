@@ -27,7 +27,7 @@ builder.Services.AddScoped<IIngresoService, IngresoService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Account/Login"; // Ruta a donde redirigir si no está logueado
+        options.LoginPath = "/Auth/login"; // Ruta a donde redirigir si no está logueado
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20); // Duración de la sesión
     });
 
