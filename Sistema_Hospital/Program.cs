@@ -21,6 +21,7 @@ builder.Services.AddScoped<IMedicamentoService,  MedicamentoService>();
 builder.Services.AddScoped<ICitaService, CitaService>();
 builder.Services.AddScoped<IDiagnosticoService, DiagnosticoService>();
 builder.Services.AddScoped<ICargaMasivaService, CargaMasivaService>();
+builder.Services.AddScoped<ICargaMasivaPacienteService, CargaMasivaPacienteService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
