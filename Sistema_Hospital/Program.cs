@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Presentation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Hospital.Data;
@@ -22,6 +23,7 @@ builder.Services.AddScoped<ICitaService, CitaService>();
 builder.Services.AddScoped<IDiagnosticoService, DiagnosticoService>();
 builder.Services.AddScoped<ICargaMasivaService, CargaMasivaService>();
 builder.Services.AddScoped<ICargaMasivaPacienteService, CargaMasivaPacienteService>();
+builder.Services.AddScoped<IIngresoService, IngresoService>();  
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
