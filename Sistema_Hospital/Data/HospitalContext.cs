@@ -89,7 +89,6 @@ public partial class HospitalContext : DbContext
             entity.Property(e => e.DPI).HasColumnName("DPI");
             entity.Property(e => e.Colegiado).HasColumnName("Colegiado");
             entity.Property(e => e.Especialidad).HasColumnName("Especialidad");
-            entity.Property(e => e.Username).HasColumnName("Username");
         });
 
         modelBuilder.Entity<Sistema_Hospital.Models.ViewModels.EnfermeroListaVM>(entity =>
@@ -101,11 +100,9 @@ public partial class HospitalContext : DbContext
             entity.Property(e => e.IdEnfermero).HasColumnName("IdEnfermero");
             entity.Property(e => e.Nombre).HasColumnName("Nombre");
             entity.Property(e => e.Apellido).HasColumnName("Apellido");
-            entity.Property(e => e.DPI).HasColumnName("DPI");
             entity.Property(e => e.Telefono).HasColumnName("Telefono");
             entity.Property(e => e.Correo).HasColumnName("Correo");
             entity.Property(e => e.Genero).HasColumnName("Genero");
-            entity.Property(e => e.Username).HasColumnName("Username");
         });
 
         modelBuilder.Entity<PacienteListaVM>(entity =>
@@ -121,7 +118,6 @@ public partial class HospitalContext : DbContext
             entity.Property(e => e.IdPaciente);
             entity.Property(e => e.Nombre);
             entity.Property(e => e.Apellido);
-            entity.Property(e => e.Dpi);
             entity.Property(e => e.FechaNacimiento);
             entity.Property(e => e.Telefono);
             entity.Property(e => e.Correo);

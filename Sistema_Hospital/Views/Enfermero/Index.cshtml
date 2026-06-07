@@ -27,10 +27,8 @@
                         <tr>
                             <th class="ps-4">ID</th>
                             <th>Nombre del Enfermero(a)</th>
-                            <th>DPI</th>
                             <th>Teléfono</th>
                             <th>Correo Electrónico</th>
-                            <th>Usuario Ligado</th>
                             <th class="text-end pe-4">Acciones</th>
                         </tr>
                     </thead>
@@ -61,14 +59,9 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><span class="badge bg-light text-dark border font-monospace">@item.DPI</span></td>
                                     <td>@item.Telefono</td>
                                     <td>@item.Correo</td>
-                                    <td>
-                                        <span class="text-primary fw-semibold">
-                                            <i class="bi bi-person-fill me-1"></i>@@@item.Username
-                                        </span>
-                                    </td>
+
                                     <td class="text-end pe-4">
                                         <a asp-action="Editar" asp-route-id="@item.IdEnfermero" class="btn btn-sm btn-outline-warning">
                                             <i class="bi bi-pencil-square me-1"></i>Perfil

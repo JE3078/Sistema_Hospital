@@ -86,7 +86,7 @@ namespace Sistema_Hospital.Servicios
                 .Select(p => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
                 {
                     Value = p.IdPaciente.ToString(),
-                    Text = $"{p.Nombre} {p.Apellido} (DPI: {p.Dpi})"
+                    Text = $"{p.Nombre} {p.Apellido}"
                 }).ToListAsync();
 
             model.Areas = await _context.AreaHospital

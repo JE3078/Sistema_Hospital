@@ -279,10 +279,10 @@ namespace Sistema_Hospital.Servicios
 
         // Métodos auxiliares privados para rellenar los DropDownLists
         private async Task<List<SelectListItem>> ObtenerListaPacientes() =>
-            await context.Pacientes.Select(p => new SelectListItem { Value = p.IdPaciente.ToString(), Text = p.Nombre }).ToListAsync();
+            await context.Pacientes.Select(p => new SelectListItem { Value = p.IdPaciente.ToString(), Text = p.Nombre + " " + p.Apellido }).ToListAsync();
 
         private async Task<List<SelectListItem>> ObtenerListaMedicos() =>
-            await context.Medicos.Select(m => new SelectListItem { Value = m.IdMedico.ToString(), Text = m.Nombre }).ToListAsync();
+            await context.Medicos.Select(m => new SelectListItem { Value = m.IdMedico.ToString(), Text = m.Nombre + " " + m.Apellido}).ToListAsync();
 
         private async Task<List<SelectListItem>> ObtenerListaEstados() =>
             await context.Estados.Select(e => new SelectListItem { Value = e.IdEstado.ToString(), Text = e.NombreEstado }).ToListAsync();

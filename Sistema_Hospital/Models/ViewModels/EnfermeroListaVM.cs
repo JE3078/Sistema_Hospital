@@ -10,16 +10,11 @@ namespace Sistema_Hospital.Models.ViewModels
 
         public string Apellido { get; set; } = null!;
 
-        public string DPI { get; set; } = null!;
-
         public string Telefono { get; set; } = null!;
 
         public string Correo { get; set; } = null!;
 
         [Display(Name = "Género")]
         public string Genero { get; set; } = null!;
-
-        [Display(Name = "Usuario de Sistema")]
-        public string Username { get; set; } = null!;
     }
 }
