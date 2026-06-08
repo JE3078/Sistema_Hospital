@@ -100,88 +100,90 @@
                     <ul class="navbar-nav me-auto">
 
                         <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Home"
-                               asp-action="Index">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
                                 <i class="bi bi-house-door-fill me-1"></i>
                                 Inicio
                             </a>
                         </li>
 
-                        @if (User.Identity.IsAuthenticated && User.IsInRole("1"))
+                        @* MENÚ PROTEGIDO POR ROLES (SOLO PARA USUARIOS LOGUEADOS) *@
+                        @if (User.Identity.IsAuthenticated)
                         {
+                            @* 1. USUARIOS -> Administrador (1) *@
+                            @if (User.IsInRole("1"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Usuario" asp-action="Index">
+                                        <i class="bi bi-people-fill me-1"></i>
+                                        Usuarios
+                                    </a>
+                                </li>
+                            }
+
+                            @* 2. MÉDICOS -> Administrador (1) *@
+                            @if (User.IsInRole("1"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Medico" asp-action="Index">
+                                        <i class="bi bi-person-badge-fill me-1"></i>
+                                        Médicos
+                                    </a>
+                                </li>
+                            }
+
+                            @* 3. ENFERMEROS -> Administrador (1) y Médico (2) *@
+                            @if (User.IsInRole("1") || User.IsInRole("2"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Enfermero" asp-action="Index">
+                                        <i class="bi bi-heart-pulse-fill me-1"></i>
+                                        Enfermeros
+                                    </a>
+                                </li>
+                            }
+
+                            @* 4. PACIENTES -> Todos (1, 2, 3) *@
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Paciente" asp-action="Index">
+                                    <i class="bi bi-person-vcard-fill me-1"></i>
+                                    Pacientes
+                                </a>
+                            </li>
+
+                            @* 5. MEDICAMENTOS -> Todos (1, 2, 3) *@
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Medicamento" asp-action="Index">
+                                    <i class="bi bi-capsule-pill me-1"></i>
+                                    Medicamentos
+                                </a>
+                            </li>
+
+                            @* 6. CITAS -> Todos (1, 2, 3) *@
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Cita" asp-action="Index">
+                                    <i class="bi bi-calendar-check-fill me-1"></i>
+                                    Citas
+                                </a>
+                            </li>
+
+                            @* 7. INGRESOS HOSPITALARIOS -> Todos (1, 2, 3) *@
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Ingreso" asp-action="Index">
+                                    <i class="bi bi-hospital me-1"></i>
+                                    Ingresos
+                                </a>
+                            </li>
+
+                            @* ESTADÍSTICAS / BI -> Todos (1, 2, 3) *@
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   asp-controller="Usuario"
-                                   asp-action="Index">
-                                    <i class="bi bi-people-fill me-1"></i>
-                                    Usuarios
+                                   href="https://app.powerbi.com/groups/me/reports/6da9cec8-d10c-4573-b7fb-1c0586885b7d/2715308db5923c438489?experience=power-bi"
+                                   target="_blank">
+                                    <i class="bi bi-bar-chart-fill me-1"></i>
+                                    Estadísticas
                                 </a>
                             </li>
                         }
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Medico"
-                               asp-action="Index">
-                                <i class="bi bi-person-badge-fill me-1"></i>
-                                Médicos
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Enfermero"
-                               asp-action="Index">
-                                <i class="bi bi-heart-pulse-fill me-1"></i>
-                                Enfermeros
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Paciente"
-                               asp-action="Index">
-                                <i class="bi bi-person-vcard-fill me-1"></i>
-                                Pacientes
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Medicamento"
-                               asp-action="Index">
-                                <i class="bi bi-capsule-pill me-1"></i>
-                                Medicamentos
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Cita"
-                               asp-action="Index">
-                                <i class="bi bi-calendar-check-fill me-1"></i>
-                                Citas
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Ingreso"
-                               asp-action="Index">
-                                <i class="bi bi-hospital me-1"></i>
-                                Ingresos
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               href="https://app.powerbi.com/groups/me/reports/6da9cec8-d10c-4573-b7fb-1c0586885b7d/2715308db5923c438489?experience=power-bi"
-                               target="_blank">
-                                <i class="bi bi-bar-chart-fill me-1"></i>
-                                Estadísticas
-                            </a>
-                        </li>
 
                     </ul>
 
@@ -239,6 +241,7 @@
                 &copy; @DateTime.Now.Year - Facultad de Ingeniería (UPANA)
             </small>
         </div>
+        </
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
