@@ -29,6 +29,8 @@ public partial class Medico
 
     public int? IdUsuario { get; set; }
 
+    public bool Estado {  get; set; }
+
     public virtual ICollection<Cita> Cita { get; set; } = new List<Cita>();
 
     public virtual Especialidad IdEspecialidadNavigation { get; set; } = null!;

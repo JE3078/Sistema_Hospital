@@ -21,6 +21,8 @@ public partial class Enfermero
 
     public int? IdUsuario { get; set; }
 
+    public bool Estado { get; set; } = true;
+
     public virtual Genero IdGeneroNavigation { get; set; } = null!;
 
     public virtual UsuarioSistema? IdUsuarioNavigation { get; set; }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sistema_Hospital.Controllers
 {
-    [Authorize(Roles = "1")] // Solo el Administrador puede contratar personal
+    [Authorize(Roles = "1,2")]
     public class EnfermeroController : Controller
     {
         private readonly IEnfermeroService _enfermeroService;
@@ -113,5 +113,31 @@ namespace Sistema_Hospital.Controllers
         }
 
         #endregion
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            var exito = await _enfermeroService.EliminarEnfermero(id);
+
+            if (exito)
+            {
+                // Recuperamos datos saltando el filtro para registrar correctamente el nombre en la auditoría
+                var enfermeroEliminado = await _context.Enfermeros
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(e => e.IdEnfermero == id);
+
+                int idAdmin = int.Parse(User.FindFirst("ID_Usuario")?.Value ?? "0");
+                await _bitacoraService.RegistrarAccion(idAdmin,
+                    $"BORRADO LÓGICO: Inactivó el expediente del Enfermero ID #{id} " +
+                    $"(Lic./Enf. {enfermeroEliminado?.Nombre} {enfermeroEliminado?.Apellido}) y suspendió su acceso al sistema.");
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.Error = "No se pudo dar de baja al enfermero.";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

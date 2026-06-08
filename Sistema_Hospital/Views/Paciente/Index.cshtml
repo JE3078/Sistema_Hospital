@@ -4,194 +4,222 @@
     ViewData["Title"] = "Expediente de Pacientes";
 }
 
-<div class="container-fluid py-4">
+<div class="container-fluid">
 
-    <!-- HEADER -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-        <div>
-            <h2 class="fw-bold text-dark mb-1">
-                <i class="bi bi-people-fill text-primary me-2"></i>
+    <div class="row align-items-center mb-4">
+
+        <div class="col-md-7">
+
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="bi bi-people-fill me-2"></i>
                 Control de Pacientes
             </h2>
-            <p class="text-muted mb-0">Administración y gestión de expedientes clínicos</p>
+
+            <p class="text-muted mb-0">
+                Gestión centralizada de expedientes clínicos y registros del sistema.
+            </p>
+
         </div>
-        <div class="d-flex gap-2">
-            <a asp-action="Index" asp-controller="CargaMasivaPaciente" class="btn btn-success shadow-sm px-4">
-                <i class="bi bi-filetype-csv me-2"></i>Carga Masiva CSV
-            </a>
-            <a asp-action="Crear" asp-controller="Paciente" class="btn btn-primary shadow-sm px-4">
-                <i class="bi bi-person-plus-fill me-2"></i>Registrar Paciente
-            </a>
+
+        <div class="col-md-5 text-md-end mt-3 mt-md-0">
+
+            <div class="d-inline-flex gap-2 w-100 w-md-auto justify-content-md-end">
+
+                <a asp-action="Index"
+                   asp-controller="CargaMasivaPaciente"
+                   class="btn btn-success shadow-sm">
+                    <i class="bi bi-filetype-csv me-1"></i>
+                    Carga Masiva
+                </a>
+
+                <a asp-action="Crear"
+                   asp-controller="Paciente"
+                   class="btn btn-primary shadow-sm">
+                    <i class="bi bi-person-plus-fill me-1"></i>
+                    Registrar Paciente
+                </a>
+
+            </div>
+
         </div>
+
     </div>
 
-    <!-- ALERTA SISTEMA -->
-    <div class="alert border-0 shadow-sm mb-4 bg-light">
-        <div class="d-flex">
-            <div class="me-3">
-                <i class="bi bi-shield-lock-fill text-secondary fs-3"></i>
-            </div>
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+
+        <div class="d-flex align-items-center">
+
+            <i class="bi bi-shield-lock-fill fs-2 me-3"></i>
+
             <div>
-                <h6 class="fw-bold text-secondary mb-1">Infraestructura de Datos Optimizada</h6>
-                <p class="mb-0 text-muted small">
-                    Esta tabla consume la vista relacional
-                    <code class="bg-white px-1 rounded text-danger">Hospitalario.vw_PacienteLista</code>
-                    optimizando el procesamiento de relaciones y consultas directamente desde SQL Server.
-                </p>
+
+                <strong>Infraestructura de Datos Optimizada</strong>
+                <br />
+
+                Esta información proviene de la vista
+                <code class="bg-white px-2 py-1 rounded text-danger">
+                    Hospitalario.vw_PacienteLista
+                </code>
+
+                garantizando un acceso controlado y de alto rendimiento a las relaciones clínicas.
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- CARD PRINCIPAL -->
-    <div class="card border-0 shadow rounded-4 overflow-hidden">
+    <div class="card border-0 shadow-lg">
 
-        <!-- HEADER TABLA -->
-        <div class="card-header bg-white border-0 py-3">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <div>
-                    <h5 class="mb-0 fw-bold text-dark">Expedientes Registrados</h5>
-                    <small class="text-muted">
-                        Total de pacientes: <span class="fw-bold text-primary">@Model.Count()</span>
-                    </small>
-                </div>
-            </div>
+        <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+                <i class="bi bi-folder-fill me-2"></i>
+                Expedientes Registrados
+            </h5>
+
+            <span class="badge bg-white text-primary fw-bold px-3 py-2 fs-6 rounded-pill">
+                Total: @Model.Count()
+            </span>
+
         </div>
 
-        <!-- TABLA -->
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="ps-4">Paciente</th>
-                        <th>Fecha Nacimiento</th>
-                        <th>Teléfono</th>
-                        <th>Correo Electrónico</th>
-                        <th>Género</th>
-                        <th class="text-end pe-4">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!Model.Any())
-                    {
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
                         <tr>
-                            <td colspan="7" class="text-center py-5">
-                                <div class="d-flex flex-column align-items-center">
-                                    <div class="bg-light rounded-circle p-4 mb-3">
-                                        <i class="bi bi-folder-x text-secondary fs-1"></i>
-                                    </div>
-                                    <h5 class="text-muted fw-bold">No hay pacientes registrados</h5>
-                                    <p class="text-muted mb-3">Actualmente no existen expedientes clínicos en el sistema.</p>
-                                    <a asp-action="Crear" asp-controller="Paciente" class="btn btn-primary">
-                                        <i class="bi bi-person-plus-fill me-2"></i>Registrar Primer Paciente
-                                    </a>
-                                </div>
-                            </td>
+                            <th class="ps-4">Paciente</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Género</th>
+                            <th class="text-end pe-4">Acciones</th>
                         </tr>
-                    }
-                    else
-                    {
-                        @foreach (var item in Model)
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (!Model.Any())
                         {
                             <tr>
-                                <td class="ps-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-circle me-3">
-                                            <i class="bi bi-person-fill"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-dark">@item.Nombre @item.Apellido</div>
-                                            <small class="text-muted">Expediente #@item.IdPaciente</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="text-muted">
-                                        <i class="bi bi-calendar-event me-1"></i>
-                                        @item.FechaNacimiento.ToString("dd/MM/yyyy")
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="fw-semibold text-dark">
-                                        <i class="bi bi-telephone-fill text-success me-1"></i>@item.Telefono
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="mailto:@item.Correo" class="text-decoration-none">
-                                        <i class="bi bi-envelope-fill text-primary me-1"></i>@item.Correo
+
+                                <td colspan="6"
+                                    class="text-center py-5 text-muted">
+
+                                    <i class="bi bi-folder-x fs-1 d-block mb-3"></i>
+
+                                    <h5>No hay pacientes registrados</h5>
+
+                                    <small class="d-block mb-3">Actualmente no existen expedientes activos en el sistema.</small>
+
+                                    <a asp-action="Crear"
+                                       asp-controller="Paciente"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="bi bi-person-plus-fill me-1"></i>
+                                        Registrar paciente
                                     </a>
+
                                 </td>
-                                <td>
-                                    <span class="badge rounded-pill bg-info-subtle text-info border px-3 py-2">
-                                        @item.Genero
-                                    </span>
-                                </td>
-                                <td class="text-end pe-4">
-                                    <div class="btn-group">
-                                        <a asp-action="Editar" asp-route-id="@item.IdPaciente"
-                                           class="btn btn-sm btn-outline-warning">
-                                            <i class="bi bi-pencil-square me-1"></i>Editar
-                                        </a>
-                                    </div>
-                                </td>
+
                             </tr>
                         }
-                    }
-                </tbody>
-            </table>
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td class="ps-4">
+
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="bg-primary bg-opacity-10
+                                                                text-primary rounded-circle
+                                                                p-2 me-3">
+                                                <i class="bi bi-person-fill"></i>
+                                            </div>
+
+                                            <div>
+                                                <span class="fw-bold d-block text-dark">
+                                                    @item.Nombre @item.Apellido
+                                                </span>
+                                                <small class="text-muted fw-semibold">
+                                                    ID #@item.IdPaciente
+                                                </small>
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td class="text-muted">
+                                        <i class="bi bi-calendar-event me-1 text-secondary"></i>
+                                        @item.FechaNacimiento.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td class="text-muted">
+                                        <i class="bi bi-telephone me-1 text-success"></i>
+                                        @item.Telefono
+                                    </td>
+
+                                    <td>
+                                        <a href="mailto:@item.Correo" class="text-decoration-none fw-medium">
+                                            <i class="bi bi-envelope me-1 text-primary"></i>
+                                            @item.Correo
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-1.5 fw-semibold">
+                                            @item.Genero
+                                        </span>
+                                    </td>
+
+                                    <td class="text-end pe-4">
+
+                                        <div class="d-inline-flex gap-2">
+
+                                            <a asp-action="Editar"
+                                               asp-route-id="@item.IdPaciente"
+                                               class="btn btn-sm btn-outline-warning">
+                                                <i class="bi bi-pencil-square me-1"></i>
+                                                Editar
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
         </div>
+
+        <div class="card-footer bg-light">
+
+            <small class="text-muted">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                Las modificaciones realizadas sobre los expedientes clínicos quedan registradas en las bitácoras de auditoría del sistema hospitalario.
+
+            </small>
+
+        </div>
+
     </div>
+
 </div>
-
-<style>
-    body {
-        background-color: #f8f9fc;
-    }
-
-    .card {
-        transition: all .2s ease;
-    }
-
-    .table > :not(caption) > * > * {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        vertical-align: middle;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(13, 110, 253, 0.03);
-        transition: all .15s ease;
-    }
-
-    .avatar-circle {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: rgba(13,110,253,.1);
-        color: #0d6efd;
-        font-size: 1.2rem;
-    }
-
-    .btn {
-        transition: all .2s ease;
-    }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-    .badge {
-        font-weight: 500;
-        font-size: .78rem;
-    }
-
-    .table thead th {
-        font-size: .85rem;
-        text-transform: uppercase;
-        letter-spacing: .5px;
-        color: #6c757d;
-        font-weight: 700;
-    }
-</style>

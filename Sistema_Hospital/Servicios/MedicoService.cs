@@ -10,6 +10,7 @@ namespace Sistema_Hospital.Servicios
     public interface IMedicoService
     {
         Task<bool> ActualizarMedico(MedicoEditarVM model);
+        Task<bool> EliminarMedico(int idMedico);
         Task<IEnumerable<MedicoListaVM>> ListaMedicos();
         Task<MedicoEditarVM?> ObtenerMedicoParaEditar(int idMedico);
         Task<bool> RegistrarMedico(MedicoCrearVM model);
@@ -139,6 +140,40 @@ namespace Sistema_Hospital.Servicios
                 _context.Medicos.Update(medico);
                 await _context.SaveChangesAsync();
 
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
+        }
+
+        public async Task<bool> EliminarMedico(int idMedico)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Traemos al médico incluyendo su usuario asignado
+                var medico = await _context.Medicos
+                    .Include(m => m.IdUsuarioNavigation)
+                    .FirstOrDefaultAsync(m => m.IdMedico == idMedico);
+
+                if (medico == null) return false;
+
+                // Paso 1: Borrado lógico del Médico
+                medico.Estado = false;
+                _context.Medicos.Update(medico);
+
+                // Paso 2: Deshabilitar también su cuenta de usuario (si tiene una asignada)
+                if (medico.IdUsuarioNavigation != null)
+                {
+                    medico.IdUsuarioNavigation.Estado = false;
+                    _context.UsuarioSistemas.Update(medico.IdUsuarioNavigation);
+                }
+
+                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
             }

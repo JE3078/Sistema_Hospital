@@ -129,5 +129,36 @@ namespace Sistema_Hospital.Controllers
         }
 
         #endregion
+
+        #region Eliminar
+
+        // POST: /Medico/Eliminar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            var exito = await _medicoService.EliminarMedico(id);
+
+            if (exito)
+            {
+                // Obtener datos del médico (saltándose el filtro de activos para la bitácora)
+                var medicoEliminado = await _context.Medicos
+                    .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(m => m.IdMedico == id);
+
+                // Auditoría obligatoria en Bitácora
+                int idAdmin = int.Parse(User.FindFirst("ID_Usuario")?.Value ?? "0");
+                await _bitacoraService.RegistrarAccion(idAdmin,
+                    $"BORRADO LÓGICO: Inactivó el expediente del Médico ID #{id} " +
+                    $"(Dr. {medicoEliminado?.Nombre} {medicoEliminado?.Apellido}) y suspendió su cuenta de acceso.");
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.Error = "No se pudo eliminar el registro del médico.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion
     }
 }

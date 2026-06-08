@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Sistema_Hospital.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "1,2,3")]
     public class CitaController : Controller
     {
         private readonly ICitaService citaService;
@@ -27,7 +27,7 @@ namespace Sistema_Hospital.Controllers
         {
             var rolClaim = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if(rolClaim == "1")
+            if (rolClaim == "1" || rolClaim == "3")
             {
                 var citas = await citaService.ListaCitas();
                 return View(citas);

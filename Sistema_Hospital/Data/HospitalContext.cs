@@ -204,11 +204,13 @@ public partial class HospitalContext : DbContext
             entity.HasKey(e => e.IdEnfermero).HasName("PK__Enfermer__82E641DAD2C6F9DA");
 
             entity.ToTable("Enfermero", "Hospitalario");
-
+            entity.HasQueryFilter(e => e.Estado);
             entity.HasIndex(e => e.Dpi, "UQ_Enfermero_DPI").IsUnique();
 
             entity.HasIndex(e => e.IdUsuario, "UQ__Enfermer__DE4431C41C64CA55").IsUnique();
-
+            entity.Property(e => e.Estado)
+        .HasColumnName("Estado")
+        .HasDefaultValue(true);
             entity.Property(e => e.IdEnfermero).HasColumnName("ID_Enfermero");
             entity.Property(e => e.Apellido)
                 .HasMaxLength(50)
@@ -341,10 +343,15 @@ public partial class HospitalContext : DbContext
 
             entity.ToTable("Medico", "Hospitalario");
 
+            entity.HasQueryFilter(m => m.Estado);
+
+
             entity.HasIndex(e => e.Dpi, "UQ_Medico_DPI").IsUnique();
 
             entity.HasIndex(e => e.IdUsuario, "UQ__Medico__DE4431C47F40EB90").IsUnique();
-
+            entity.Property(e => e.Estado)
+                    .HasColumnName("Estado")
+                    .HasDefaultValue(true);
             entity.Property(e => e.IdMedico).HasColumnName("ID_Medico");
             entity.Property(e => e.Apellido)
                 .HasMaxLength(50)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -9,6 +10,7 @@ using Sistema_Hospital.Servicios;
 
 namespace Sistema_Hospital.Controllers
 {
+    [Authorize(Roles = "1,2,3")]
     public class MedicamentoController : Controller
     {
         private readonly IMedicamentoService medicamentoService;

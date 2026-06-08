@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sistema_Hospital.Controllers
 {
-    //[Authorize(Roles = "1, 2")] // Solo el Administrador puede contratar personal
-//prueba
+    [Authorize(Roles = "1,2,3")]
     public class PacienteController : Controller
     {
         private readonly IPacienteService pacienteService;

@@ -4,26 +4,77 @@
     ViewData["Title"] = "Control de Citas";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-calendar-check-fill text-primary me-2"></i>Agenda de Citas Médicas</h2>
-        <a asp-action="Crear" asp-controller="Cita" class="btn btn-primary shadow-sm">
-            <i class="bi bi-calendar-plus me-1"></i> Agendar Nueva Cita
-        </a>
-    </div>
+<div class="container-fluid">
 
-    <div class="alert alert-secondary border-0 bg-light shadow-sm d-flex align-items-center mb-4" role="alert">
-        <i class="bi bi-shield-lock-fill text-secondary fs-4 me-3"></i>
-        <div>
-            <strong class="text-secondary">Seguridad y Control de Accesos:</strong> Los médicos en sesión únicamente pueden visualizar su respectiva agenda asignada. Las modificaciones o cancelaciones extemporáneas quedan registradas de manera estricta en la bitácora del sistema.
+    <!-- ENCABEZADO -->
+    <div class="row align-items-center mb-4">
+
+        <div class="col-md-8">
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="bi bi-calendar-check-fill me-2"></i>
+                Agenda de Citas Médicas
+            </h2>
+
+            <p class="text-muted mb-0">
+                Administración y seguimiento de las consultas programadas.
+            </p>
         </div>
+
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a asp-action="Crear"
+               asp-controller="Cita"
+               class="btn btn-primary shadow-sm">
+
+                <i class="bi bi-calendar-plus me-1"></i>
+                Agendar Nueva Cita
+
+            </a>
+        </div>
+
     </div>
 
-    <div class="card shadow-sm border-0">
+    <!-- ALERTA INFORMATIVA -->
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+
+        <div class="d-flex align-items-center">
+
+            <i class="bi bi-shield-lock-fill fs-2 me-3"></i>
+
+            <div>
+
+                <strong>Seguridad y Control de Accesos</strong>
+                <br />
+
+                Los médicos únicamente pueden visualizar las citas que les
+                han sido asignadas. Todas las modificaciones y cancelaciones
+                quedan registradas automáticamente en la bitácora del sistema.
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+    <div class="card border-0 shadow-lg">
+
+        <div class="card-header bg-primary text-white py-3">
+
+            <h5 class="mb-0">
+                <i class="bi bi-calendar-week me-2"></i>
+                Citas Programadas
+            </h5>
+
+        </div>
+
         <div class="card-body p-0">
+
             <div class="table-responsive">
+
                 <table class="table table-hover align-middle mb-0">
+
                     <thead class="table-light">
+
                         <tr>
                             <th class="ps-4">ID</th>
                             <th>Paciente</th>
@@ -32,15 +83,28 @@
                             <th>Motivo de Consulta</th>
                             <th class="text-end pe-4">Acciones</th>
                         </tr>
+
                     </thead>
+
                     <tbody>
+
                         @if (!Model.Any())
                         {
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">
-                                    <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
-                                    No se encontraron citas programadas en este momento.
+
+                                <td colspan="6"
+                                    class="text-center py-5 text-muted">
+
+                                    <i class="bi bi-calendar-x fs-1 d-block mb-3"></i>
+
+                                    <h5>No existen citas programadas</h5>
+
+                                    <small>
+                                        Actualmente no se encontraron registros.
+                                    </small>
+
                                 </td>
+
                             </tr>
                         }
                         else
@@ -48,37 +112,98 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td class="ps-4 text-muted">#@item.IdCita</td>
+
+                                    <td class="ps-4 text-muted fw-semibold">
+                                        #@item.IdCita
+                                    </td>
+
                                     <td>
+
                                         <div class="d-flex align-items-center">
-                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-2">
-                                                <i class="bi bi-person-fill fs-6"></i>
+
+                                            <div class="bg-primary bg-opacity-10
+                                                                text-primary rounded-circle
+                                                                p-2 me-2">
+
+                                                <i class="bi bi-person-fill"></i>
+
                                             </div>
-                                            <span class="fw-bold text-dark">@item.NombrePaciente</span>
+
+                                            <span class="fw-bold">
+                                                @item.NombrePaciente
+                                            </span>
+
                                         </div>
+
                                     </td>
-                                    <td><span class="text-secondary fw-semibold"><i class="bi bi-heart-pulse me-1"></i>@item.NombreMedico</span></td>
+
                                     <td>
-                                        <span class="fw-medium text-dark">
-                                            <i class="bi bi-clock me-1 text-muted"></i> @item.FechaHora.ToString("dd/MM/yyyy HH:mm")
+
+                                        <span class="fw-semibold text-secondary">
+                                            <i class="bi bi-heart-pulse me-1"></i>
+                                            @item.NombreMedico
                                         </span>
+
                                     </td>
+
                                     <td>
-                                        <span class="text-muted d-inline-block text-truncate" style="max-width: 200px;" title="@item.Motivo">
+
+                                        <i class="bi bi-clock me-1 text-muted"></i>
+
+                                        @item.FechaHora.ToString("dd/MM/yyyy HH:mm")
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="text-muted d-inline-block text-truncate"
+                                              style="max-width:250px;"
+                                              title="@item.Motivo">
+
                                             @item.Motivo
+
                                         </span>
+
                                     </td>
+
                                     <td class="text-end pe-4">
-                                        <a asp-action="Editar" asp-route-id="@item.IdCita" class="btn btn-sm btn-outline-warning">
-                                            <i class="bi bi-pencil-square me-1"></i>Gestionar
+
+                                        <a asp-action="Editar"
+                                           asp-route-id="@item.IdCita"
+                                           class="btn btn-sm btn-outline-warning">
+
+                                            <i class="bi bi-pencil-square me-1"></i>
+                                            Gestionar
+
                                         </a>
+
                                     </td>
+
                                 </tr>
                             }
                         }
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
+
+        <div class="card-footer bg-light">
+
+            <small class="text-muted">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                Las citas médicas permiten mantener un control centralizado
+                de pacientes, médicos y horarios disponibles.
+
+            </small>
+
+        </div>
+
     </div>
+
 </div>

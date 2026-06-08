@@ -10,6 +10,7 @@ namespace Sistema_Hospital.Servicios
     public interface IEnfermeroService
     {
         Task<bool> ActualizarEnfermero(EnfermeroEditarVM model);
+        Task<bool> EliminarEnfermero(int idEnfermero);
         Task<IEnumerable<EnfermeroListaVM>> ListaEnfermeros();
         Task<EnfermeroEditarVM?> ObtenerEnfermeroParaEditar(int idEnfermero);
         Task<bool> RegistrarEnfermero(EnfermeroCrearVM model);
@@ -160,6 +161,39 @@ namespace Sistema_Hospital.Servicios
                 }
             }
             return Convert.ToBase64String(ms.ToArray());
+        }
+
+        public async Task<bool> EliminarEnfermero(int idEnfermero)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var enfermero = await _context.Enfermeros
+                    .Include(e => e.IdUsuarioNavigation)
+                    .FirstOrDefaultAsync(e => e.IdEnfermero == idEnfermero);
+
+                if (enfermero == null) return false;
+
+                // Paso 1: Borrado lógico del Enfermero
+                enfermero.Estado = false;
+                _context.Enfermeros.Update(enfermero);
+
+                // Paso 2: Deshabilitar cuenta de usuario asociada
+                if (enfermero.IdUsuarioNavigation != null)
+                {
+                    enfermero.IdUsuarioNavigation.Estado = false;
+                    _context.UsuarioSistemas.Update(enfermero.IdUsuarioNavigation);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
 
         private string DescifrarTexto(string textoCifrado)

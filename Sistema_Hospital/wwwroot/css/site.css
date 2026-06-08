@@ -20,3 +20,28 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card {
+    border-radius: 15px;
+}
+
+.card-header {
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+}
+
+.btn {
+    border-radius: 8px;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+    .table thead th {
+        vertical-align: middle;
+    }
+
+.alert {
+    border-radius: 12px;
+}

@@ -4,71 +4,230 @@
     ViewData["Title"] = "Gestión de Usuarios";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-people-fill text-primary me-2"></i>Gestión de Usuarios</h2>
-        <a asp-action="Crear" class="btn btn-primary shadow-sm">
-            <i class="bi bi-person-plus-fill me-1"></i> Nuevo Usuario
-        </a>
+<div class="container-fluid">
+
+    <div class="row align-items-center mb-4">
+
+        <div class="col-md-8">
+
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="bi bi-people-fill me-2"></i>
+                Gestión de Usuarios
+            </h2>
+
+            <p class="text-muted mb-0">
+                Administración de accesos, roles y permisos al sistema hospitalario.
+            </p>
+
+        </div>
+
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+            <a asp-action="Crear"
+               class="btn btn-primary shadow-sm">
+
+                <i class="bi bi-person-plus-fill me-1"></i>
+                Nuevo Usuario
+
+            </a>
+
+        </div>
+
     </div>
 
-    <div class="card shadow-sm border-0">
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+
+        <div class="d-flex align-items-center">
+
+            <i class="bi bi-shield-lock-fill fs-2 me-3"></i>
+
+            <div>
+
+                <strong>Control de Credenciales</strong>
+                <br />
+
+                Todas las contraseñas se almacenan mediante algoritmos de hash unidireccionales. Las modificaciones de roles quedan registradas de manera estricta.
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-lg">
+
+        <div class="card-header bg-primary text-white py-3">
+
+            <h5 class="mb-0">
+                <i class="bi bi-lock-fill me-2"></i>
+                Registro de Usuarios y Accesos
+            </h5>
+
+        </div>
+
         <div class="card-body p-0">
+
             <div class="table-responsive">
+
                 <table class="table table-hover align-middle mb-0">
+
                     <thead class="table-light">
+
                         <tr>
                             <th class="ps-4">ID</th>
-                            <th>Nombre de Usuario</th>
-                            <th>Rol Asignado</th>
+                            <th>Usuario</th>
+                            <th>Rol</th>
                             <th>Estado</th>
                             <th class="text-end pe-4">Acciones</th>
                         </tr>
+
                     </thead>
+
                     <tbody>
-                        @foreach (var item in Model)
+
+                        @if (!Model.Any())
                         {
                             <tr>
-                                <td class="ps-4">@item.IdUsuario</td>
-                                <td class="fw-bold">@item.Username</td>
-                                <td>
-                                    @* Evaluamos el ID del rol para mostrar etiquetas legibles con Bootstrap *@
-                                    @switch (item.IdRol)
-                                    {
-                                        case 1:
-                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">Administrador</span>
-                                            break;
-                                        case 2:
-                                            <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1">Médico</span>
-                                            break;
-                                        case 3:
-                                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Enfermero</span>
-                                            break;
-                                        default:
-                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1">Rol @item.IdRol</span>
-                                            break;
-                                    }
-                                </td>
-                                <td>
-                                    @if (item.Estado == true)
-                                    {
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Activo</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">Inactivo</span>
-                                    }
-                                </td>
-                                <td class="text-end pe-4">
-                                    <a asp-action="Editar" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-outline-warning shadow-sm">
-                                        <i class="bi bi-pencil-square me-1"></i>Editar
+
+                                <td colspan="5"
+                                    class="text-center py-5 text-muted">
+
+                                    <i class="bi bi-person-x fs-1 d-block mb-3"></i>
+
+                                    <h5>No hay usuarios registrados</h5>
+
+                                    <small class="d-block mb-3">Cree el primer usuario del sistema para comenzar.</small>
+
+                                    <a asp-action="Crear"
+                                       class="btn btn-sm btn-primary">
+                                        <i class="bi bi-person-plus-fill me-1"></i>
+                                        Nuevo Usuario
                                     </a>
+
                                 </td>
+
                             </tr>
                         }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td class="ps-4 text-muted fw-semibold">
+                                        #@item.IdUsuario
+                                    </td>
+
+                                    <td>
+
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="bg-primary bg-opacity-10
+                                                                text-primary rounded-circle
+                                                                p-2 me-3">
+                                                <i class="bi bi-person-badge-fill"></i>
+                                            </div>
+
+                                            <div>
+                                                <span class="fw-bold d-block text-dark">
+                                                    @item.Username
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+                                        @switch (item.IdRol)
+                                        {
+                                            case 1:
+                                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1.5 fw-semibold">
+                                                    Administrador
+                                                </span>
+                                                break;
+
+                                            case 2:
+                                                <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-1.5 fw-semibold">
+                                                    Médico
+                                                </span>
+                                                break;
+
+                                            case 3:
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 fw-semibold">
+                                                    Enfermero
+                                                </span>
+                                                break;
+
+                                            default:
+                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-1.5 fw-semibold">
+                                                    Rol @item.IdRol
+                                                </span>
+                                                break;
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (item.Estado == true)
+                                        {
+                                            <span class="badge bg-success text-white px-2.5 py-1.5 fw-medium">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Activo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger text-white px-2.5 py-1.5 fw-medium">
+                                                <i class="bi bi-x-circle-fill me-1"></i>Inactivo
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td class="text-end pe-4">
+
+                                        <div class="d-inline-flex gap-2">
+
+                                            <a asp-action="Editar"
+                                               asp-route-id="@item.IdUsuario"
+                                               class="btn btn-sm btn-outline-warning">
+                                                <i class="bi bi-pencil-square me-1"></i>
+                                                Editar
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
+
+        <div class="card-footer bg-light">
+
+            <small class="text-muted">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                La inhabilitación de un usuario revoca de forma inmediata sus tokens de sesión activos y detiene su capacidad de operar en la plataforma.
+
+            </small>
+
+        </div>
+
     </div>
+
 </div>
+
+<style>
+    .table-hover tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.02);
+        transition: background-color .15s ease;
+    }
+</style>

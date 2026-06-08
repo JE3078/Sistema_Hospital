@@ -4,42 +4,111 @@
     ViewData["Title"] = "Personal de Enfermería";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-heart-pulse-fill text-primary me-2"></i>Personal de Enfermería Activo</h2>
-        <a asp-action="Crear" asp-controller="Enfermero" class="btn btn-primary shadow-sm">
-            <i class="bi bi-person-plus-fill me-1"></i> Agregar Enfermero
-        </a>
-    </div>
+<div class="container-fluid">
 
-    <div class="alert alert-secondary border-0 bg-light shadow-sm d-flex align-items-center mb-4" role="alert">
-        <i class="bi bi-shield-lock-fill text-secondary fs-4 me-3"></i>
-        <div>
-            <strong class="text-secondary">Capa de Seguridad Activa:</strong> Esta tabla consume la vista cifrada <code class="bg-white px-1 py-0.5 rounded text-danger">Hospitalario.VW_Enfermeros_Activos</code>. Los hashes de contraseñas y credenciales sensibles están completamente aislados del entorno de presentación web.
+    <!-- HEADER -->
+    <div class="row align-items-center mb-4">
+
+        <div class="col-md-8">
+
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="bi bi-heart-pulse-fill me-2"></i>
+                Personal de Enfermería
+            </h2>
+
+            <p class="text-muted mb-0">
+                Gestión del personal de enfermería activo en el sistema hospitalario.
+            </p>
+
         </div>
+
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+            <a asp-action="Crear"
+               asp-controller="Enfermero"
+               class="btn btn-primary shadow-sm">
+
+                <i class="bi bi-person-plus-fill me-1"></i>
+                Agregar Enfermero
+
+            </a>
+
+        </div>
+
     </div>
 
-    <div class="card shadow-sm border-0">
+    <!-- ALERTA SEGURIDAD -->
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+
+        <div class="d-flex align-items-center">
+
+            <i class="bi bi-shield-lock-fill fs-2 me-3"></i>
+
+            <div>
+
+                <strong>Capa de Seguridad Activa</strong>
+                <br />
+
+                Esta información proviene de la vista
+                <code class="bg-white px-2 py-1 rounded text-danger">
+                    Hospitalario.VW_Enfermeros_Activos
+                </code>
+
+                garantizando separación entre datos sensibles y presentación.
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CARD TABLA -->
+    <div class="card border-0 shadow-lg">
+
+        <div class="card-header bg-primary text-white py-3">
+
+            <h5 class="mb-0">
+                <i class="bi bi-people-fill me-2"></i>
+                Registro de Enfermeros
+            </h5>
+
+        </div>
+
         <div class="card-body p-0">
+
             <div class="table-responsive">
+
                 <table class="table table-hover align-middle mb-0">
+
                     <thead class="table-light">
+
                         <tr>
                             <th class="ps-4">ID</th>
-                            <th>Nombre del Enfermero(a)</th>
+                            <th>Enfermero(a)</th>
                             <th>Teléfono</th>
-                            <th>Correo Electrónico</th>
+                            <th>Correo</th>
                             <th class="text-end pe-4">Acciones</th>
                         </tr>
+
                     </thead>
+
                     <tbody>
+
                         @if (!Model.Any())
                         {
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">
-                                    <i class="bi bi-folder-x fs-3 d-block mb-2"></i>
-                                    No hay enfermeros registrados o activos en este momento.
+
+                                <td colspan="5"
+                                    class="text-center py-5 text-muted">
+
+                                    <i class="bi bi-folder-x fs-1 d-block mb-3"></i>
+
+                                    <h5>No hay enfermeros registrados</h5>
+
+                                    <small>Actualmente no existen registros activos.</small>
+
                                 </td>
+
                             </tr>
                         }
                         else
@@ -47,32 +116,124 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td class="ps-4 text-muted">#@item.IdEnfermero</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
-                                                <i class="bi bi-person-vcard fs-5"></i>
-                                            </div>
-                                            <div>
-                                                <span class="fw-bold d-block text-dark">@item.Nombre @item.Apellido</span>
-                                                <small class="text-muted">@item.Genero</small>
-                                            </div>
-                                        </div>
+
+                                    <td class="ps-4 text-muted fw-semibold">
+                                        #@item.IdEnfermero
                                     </td>
-                                    <td>@item.Telefono</td>
-                                    <td>@item.Correo</td>
+
+                                    <td>
+
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="bg-primary bg-opacity-10
+                                                                text-primary rounded-circle
+                                                                p-2 me-3">
+
+                                                <i class="bi bi-person-vcard"></i>
+
+                                            </div>
+
+                                            <div>
+
+                                                <span class="fw-bold d-block">
+                                                    @item.Nombre @item.Apellido
+                                                </span>
+
+                                                <small class="text-muted">
+                                                    @item.Genero
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td class="text-muted">
+                                        @item.Telefono
+                                    </td>
+
+                                    <td class="text-muted">
+                                        @item.Correo
+                                    </td>
 
                                     <td class="text-end pe-4">
-                                        <a asp-action="Editar" asp-route-id="@item.IdEnfermero" class="btn btn-sm btn-outline-warning">
-                                            <i class="bi bi-pencil-square me-1"></i>Perfil
-                                        </a>
+
+                                        <div class="d-inline-flex gap-2">
+
+                                            <a asp-action="Editar"
+                                               asp-route-id="@item.IdEnfermero"
+                                               class="btn btn-sm btn-outline-warning">
+
+                                                <i class="bi bi-pencil-square me-1"></i>
+                                                Perfil
+
+                                            </a>
+
+                                            <form asp-action="Eliminar"
+                                                  asp-controller="Enfermero"
+                                                  asp-route-id="@item.IdEnfermero"
+                                                  method="post"
+                                                  class="d-inline"
+                                                  onsubmit="return confirmarBajaEnfermero(event, '@item.Nombre @item.Apellido');">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger">
+
+                                                    <i class="bi bi-person-x-fill me-1"></i>
+                                                    Dar de Baja
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
                                     </td>
+
                                 </tr>
                             }
                         }
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
+
+        <div class="card-footer bg-light">
+
+            <small class="text-muted">
+
+                <i class="bi bi-info-circle me-1"></i>
+
+                La baja de un enfermero desactiva su acceso al sistema
+                y conserva su historial clínico asociado.
+
+            </small>
+
+        </div>
+
     </div>
+
 </div>
+
+@section Scripts {
+    <script>
+        function confirmarBajaEnfermero(event, nombreEnfermero) {
+
+            if (!confirm(
+                `¿Está seguro que desea dar de baja a ${nombreEnfermero}? Esta acción desactivará su acceso al sistema.`
+            )) {
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+}

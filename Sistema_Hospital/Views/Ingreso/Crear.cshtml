@@ -1,87 +1,195 @@
 ﻿@model Sistema_Hospital.Models.ViewModels.IngresoCrearVM
 
 @{
-    ViewData["Title"] = "Registrar Ingreso Hospitalario";
+    ViewData["Title"] = "Registrar Ingreso";
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-dark mb-1">
-                <i class="bi bi-box-arrow-in-right text-primary me-2"></i>
-                Nuevo Ingreso Hospitalario
+<div class="container-fluid">
+
+    <!-- HEADER -->
+    <div class="row align-items-center mb-4">
+
+        <div class="col-md-8">
+
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Registro de Ingreso Hospitalario
             </h2>
-            <p class="text-muted mb-0">Asignación de pacientes a áreas médicas clínicas</p>
+
+            <p class="text-muted mb-0">
+                Asignación de paciente a área clínica y estado inicial
+            </p>
+
         </div>
-        <a asp-action="Index" class="btn btn-outline-secondary px-4 shadow-sm">
-            <i class="bi bi-arrow-left me-2"></i> Volver al Listado
-        </a>
+
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary shadow-sm">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+
+            </a>
+
+        </div>
+
     </div>
 
-    <div class="card border-0 shadow rounded-4 p-4 p-md-5 bg-white">
-        <form asp-action="Crear" method="post" autocomplete="off">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold"></div>
+    <!-- CARD -->
+    <div class="card border-0 shadow-lg">
 
-            <div class="row g-4">
-                <div class="col-md-12">
-                    <label asp-for="IdPaciente" class="form-label fw-bold text-dark"></label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0 text-muted">
-                            <i class="bi bi-person-fill"></i>
-                        </span>
-                        <select asp-for="IdPaciente" asp-items="Model.Pacientes" class="form-select border-start-0 ps-0">
-                            <option value="" selected disabled>-- Seleccione un Paciente Registrado --</option>
-                        </select>
+        <div class="card-header bg-primary text-white py-3">
+
+            <h5 class="mb-0">
+                <i class="bi bi-hospital me-2"></i>
+                Nuevo Ingreso Hospitalario
+            </h5>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <form asp-action="Crear" method="post" autocomplete="off">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3 fw-semibold"></div>
+
+                <div class="row g-4">
+
+                    <!-- PACIENTE -->
+                    <div class="col-md-12">
+
+                        <label asp-for="IdPaciente"
+                               class="form-label fw-semibold"></label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-person-fill"></i>
+                            </span>
+
+                            <select asp-for="IdPaciente"
+                                    asp-items="Model.Pacientes"
+                                    class="form-select">
+
+                                <option value="">-- Seleccione paciente --</option>
+
+                            </select>
+
+                        </div>
+
+                        <span asp-validation-for="IdPaciente"
+                              class="text-danger small"></span>
+
                     </div>
-                    <span asp-validation-for="IdPaciente" class="text-danger small mt-1 d-block"></span>
+
+                    <!-- AREA -->
+                    <div class="col-md-6">
+
+                        <label asp-for="IdArea"
+                               class="form-label fw-semibold"></label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-hospital"></i>
+                            </span>
+
+                            <select asp-for="IdArea"
+                                    asp-items="Model.Areas"
+                                    class="form-select">
+
+                                <option value="">-- Área destino --</option>
+
+                            </select>
+
+                        </div>
+
+                        <span asp-validation-for="IdArea"
+                              class="text-danger small"></span>
+
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div class="col-md-6">
+
+                        <label asp-for="IdEstado"
+                               class="form-label fw-semibold"></label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-heart-pulse"></i>
+                            </span>
+
+                            <select asp-for="IdEstado"
+                                    asp-items="Model.Estados"
+                                    class="form-select">
+
+                                <option value="">-- Estado clínico --</option>
+
+                            </select>
+
+                        </div>
+
+                        <span asp-validation-for="IdEstado"
+                              class="text-danger small"></span>
+
+                    </div>
+
+                    <!-- MOTIVO -->
+                    <div class="col-md-12">
+
+                        <label asp-for="Motivo"
+                               class="form-label fw-semibold"></label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text align-items-start pt-2">
+                                <i class="bi bi-journal-medical"></i>
+                            </span>
+
+                            <textarea asp-for="Motivo"
+                                      rows="4"
+                                      class="form-control"
+                                      placeholder="Describa el motivo clínico del ingreso..."></textarea>
+
+                        </div>
+
+                        <span asp-validation-for="Motivo"
+                              class="text-danger small"></span>
+
+                    </div>
+
                 </div>
 
-                <div class="col-md-6">
-                    <label asp-for="IdArea" class="form-label fw-bold text-dark"></label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0 text-muted">
-                            <i class="bi bi-hospital-fill"></i>
-                        </span>
-                        <select asp-for="IdArea" asp-items="Model.Areas" class="form-select border-start-0 ps-0">
-                            <option value="" selected disabled>-- Seleccione Área de Destino --</option>
-                        </select>
-                    </div>
-                    <span asp-validation-for="IdArea" class="text-danger small mt-1 d-block"></span>
+                <!-- BOTONES -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+
+                        Cancelar
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary shadow-sm px-4">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Registrar
+
+                    </button>
+
                 </div>
 
-                <div class="col-md-6">
-                    <label asp-for="IdEstado" class="form-label fw-bold text-dark"></label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0 text-muted">
-                            <i class="bi bi-heart-pulse-fill"></i>
-                        </span>
-                        <select asp-for="IdEstado" asp-items="Model.Estados" class="form-select border-start-0 ps-0">
-                            <option value="" selected disabled>-- Seleccione el Estado Clínico --</option>
-                        </select>
-                    </div>
-                    <span asp-validation-for="IdEstado" class="text-danger small mt-1 d-block"></span>
-                </div>
+            </form>
 
-                <div class="col-md-12">
-                    <label asp-for="Motivo" class="form-label fw-bold text-dark"></label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0 text-muted align-items-start pt-2">
-                            <i class="bi bi-journal-medical"></i>
-                        </span>
-                        <textarea asp-for="Motivo" rows="4" class="form-select border-start-0 ps-2" placeholder="Describa de manera concisa el síntoma, diagnóstico inicial o causa médica del ingreso hospitalario..."></textarea>
-                    </div>
-                    <span asp-validation-for="Motivo" class="text-danger small mt-1 d-block"></span>
-                </div>
-            </div>
+        </div>
 
-            <div class="d-flex justify-content-end gap-3 mt-5">
-                <button type="reset" class="btn btn-light px-4 border">Limpiar Campos</button>
-                <button type="submit" class="btn btn-primary px-5 shadow-sm">
-                    <i class="bi bi-check-circle-fill me-2"></i> Registrar Ingreso
-                </button>
-            </div>
-        </form>
     </div>
+
 </div>
 
 @section Scripts {
@@ -89,22 +197,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-<style>
-    body {
-        background-color: #f8f9fc;
-    }
-
-    .card {
-        border-radius: 1rem;
-    }
-
-    .form-control:focus, .form-select:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-    }
-
-    .input-group-text {
-        font-size: 1.1rem;
-    }
-</style>

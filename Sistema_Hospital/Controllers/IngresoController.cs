@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sistema_Hospital.Models.ViewModels;
 using Sistema_Hospital.Servicios;
 using System.Threading.Tasks;
 
 namespace Sistema_Hospital.Controllers
 {
+    [Authorize(Roles = "1,2,3")]
     public class IngresoController : Controller
     {
         private readonly IIngresoService _ingresoService;

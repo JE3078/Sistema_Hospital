@@ -1,11 +1,29 @@
 ﻿@model Sistema_Hospital.Models.ViewModels.DiagnosticoCrearVM
 
-<div class="form-group mb-3">
-    <label for="txtDescripcion" class="form-label font-weight-bold">Descripción del Diagnóstico (Opcional)</label>
-    <input type="text" id="txtDescripcion" name="Diagnostico.Descripcion" class="form-control" placeholder="Ej. Faringoamigdalitis bacteriana aguda (Dejar vacío si es solo agenda)" />
+<div class="mb-3">
+
+    <label class="form-label fw-semibold">
+        Descripción del Diagnóstico
+    </label>
+
+    <input type="text"
+           id="txtDescripcion"
+           name="Diagnostico.Descripcion"
+           class="form-control"
+           placeholder="Ej. Faringoamigdalitis bacteriana" />
+
 </div>
 
-<div class="form-group mb-3">
-    <label for="txtObservaciones" class="form-label font-weight-bold">Observaciones Médicas (Opcional)</label>
-    <textarea id="txtObservaciones" name="Diagnostico.Observaciones" class="form-control" rows="3" placeholder="Ej. Reposo por 3 días..."></textarea>
+<div class="mb-3">
+
+    <label class="form-label fw-semibold">
+        Observaciones Médicas
+    </label>
+
+    <textarea id="txtObservaciones"
+              name="Diagnostico.Observaciones"
+              class="form-control"
+              rows="3"
+              placeholder="Notas clínicas adicionales..."></textarea>
+
 </div>

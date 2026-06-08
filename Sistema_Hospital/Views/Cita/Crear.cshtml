@@ -4,85 +4,161 @@
     ViewData["Title"] = "Agendar Cita";
 }
 
-<div class="container-fluid px-4">
-    <h1 class="mt-4"><i class="fas fa-calendar-plus text-primary"></i> Agendar Nueva Cita</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a asp-action="Index">Citas</a></li>
-        <li class="breadcrumb-item active">Crear</li>
-    </ol>
+<div class="container-fluid">
+
+    <!-- ENCABEZADO -->
+    <div class="row align-items-center mb-4">
+
+        <div class="col-md-8">
+
+            <h2 class="fw-bold text-primary mb-1">
+                <i class="bi bi-calendar-plus-fill me-2"></i>
+                Agendar Nueva Cita
+            </h2>
+
+            <p class="text-muted mb-0">
+                Registro de consulta médica con diagnóstico y prescripción opcional.
+            </p>
+
+        </div>
+
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary shadow-sm">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver a Citas
+
+            </a>
+
+        </div>
+
+    </div>
 
     <form asp-action="Crear" method="post" id="formCita">
+
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="card card-outline card-primary mb-4 shadow-sm">
-            <div class="card-header bg-primary bg-opacity-10">
-                <h5 class="card-title mb-0 text-primary"><i class="fas fa-clock me-2"></i>Información de la Cita</h5>
+        <!-- INFORMACIÓN DE CITA -->
+        <div class="card border-0 shadow-lg mb-4">
+
+            <div class="card-header bg-primary text-white py-3">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-fill me-2"></i>
+                    Información de la Cita
+                </h5>
+
             </div>
-            <div class="card-body">
+
+            <div class="card-body p-4">
+
                 <div class="row">
-                    <div class="col-md-6 form-group mb-3">
-                        <label asp-for="IdPaciente" class="form-label font-weight-bold">Paciente</label>
-                        <select asp-for="IdPaciente" class="form-control form-select" asp-items="Model.Pacientes">
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdPaciente" class="form-label fw-semibold">Paciente</label>
+                        <select asp-for="IdPaciente" class="form-select"
+                                asp-items="Model.Pacientes">
                             <option value="">-- Seleccione Paciente --</option>
                         </select>
                         <span asp-validation-for="IdPaciente" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-6 form-group mb-3">
-                        <label asp-for="IdMedico" class="form-label font-weight-bold">Médico Tratante</label>
-                        <select asp-for="IdMedico" class="form-control form-select" asp-items="Model.Medicos">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdMedico" class="form-label fw-semibold">Médico</label>
+                        <select asp-for="IdMedico" class="form-select"
+                                asp-items="Model.Medicos">
                             <option value="">-- Seleccione Médico --</option>
                         </select>
                         <span asp-validation-for="IdMedico" class="text-danger"></span>
                     </div>
+
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 form-group mb-3">
-                        <label asp-for="FechaHora" class="form-label font-weight-bold">Fecha y Hora</label>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaHora" class="form-label fw-semibold">Fecha y Hora</label>
                         <input asp-for="FechaHora" type="datetime-local" class="form-control" />
                         <span asp-validation-for="FechaHora" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-6 form-group mb-3">
-                        <label asp-for="IdEstado" class="form-label font-weight-bold">Estado Inicial</label>
-                        <select asp-for="IdEstado" class="form-control form-select" asp-items="Model.Estados">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstado" class="form-label fw-semibold">Estado</label>
+                        <select asp-for="IdEstado" class="form-select"
+                                asp-items="Model.Estados">
                             <option value="">-- Seleccione Estado --</option>
                         </select>
                         <span asp-validation-for="IdEstado" class="text-danger"></span>
                     </div>
+
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Motivo" class="form-label font-weight-bold">Motivo de la Consulta / Síntomas</label>
-                    <textarea asp-for="Motivo" class="form-control" rows="2" placeholder="Ej. Dolor de cabeza persistente y fiebre..."></textarea>
+                <div class="mb-3">
+                    <label asp-for="Motivo" class="form-label fw-semibold">Motivo</label>
+                    <textarea asp-for="Motivo" class="form-control" rows="2"
+                              placeholder="Síntomas o motivo de consulta"></textarea>
                     <span asp-validation-for="Motivo" class="text-danger"></span>
                 </div>
+
             </div>
+
         </div>
 
-        <div class="card card-outline card-success mb-4 shadow-sm">
-            <div class="card-header bg-success bg-opacity-10 d-flex align-items-center justify-content-between">
-                <h5 class="card-title mb-0 text-success"><i class="fas fa-stethoscope me-2"></i>Información del Diagnóstico (Opcional)</h5>
+        <!-- DIAGNÓSTICO -->
+        <div class="card border-0 shadow-lg mb-4">
 
-                <button type="button" class="btn btn-info btn-sm ms-auto text-white" data-bs-toggle="modal" data-bs-target="#modalPrescripcion" id="btnAbrirPrescripcion">
-                    <i class="fas fa-capsules me-1"></i> Agregar Prescripción / Receta
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center py-3">
+
+                <h5 class="mb-0">
+                    <i class="bi bi-stethoscope me-2"></i>
+                    Diagnóstico (Opcional)
+                </h5>
+
+                <button type="button"
+                        class="btn btn-light btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalPrescripcion"
+                        id="btnAbrirPrescripcion">
+
+                    <i class="bi bi-capsule me-1"></i>
+                    Prescripción
+
                 </button>
+
             </div>
-            <div class="card-body">
-                <partial name="~/Views/Diagnostico/_Crear.cshtml" for="Diagnostico" />
+
+            <div class="card-body p-4">
+
+                <partial name="~/Views/Diagnostico/_Crear.cshtml"
+                         for="Diagnostico" />
+
             </div>
+
         </div>
 
-        <partial name="~/Views/Prescripcion/_Crear.cshtml" for="Prescripcion" />
+        <!-- PRESCRIPCIÓN (MODAL) -->
+        <partial name="~/Views/Prescripcion/_Crear.cshtml"
+                 for="Prescripcion" />
 
-        <div class="mt-4 mb-5">
+        <!-- BOTONES -->
+        <div class="d-flex gap-2 mb-5">
+
             <button type="submit" class="btn btn-primary btn-lg shadow-sm px-4">
-                <i class="fas fa-save me-2"></i>Agendar y Guardar Expediente
+                <i class="bi bi-save-fill me-2"></i>
+                Guardar Cita
             </button>
-            <a asp-action="Index" class="btn btn-secondary btn-lg shadow-sm px-4 ms-2">Cancelar</a>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary btn-lg px-4">
+                Cancelar
+            </a>
+
         </div>
+
     </form>
+
 </div>
 
 @section Scripts {
@@ -92,20 +168,14 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const btnPrescripcion = document.getElementById("btnAbrirPrescripcion");
             const modalElement = document.getElementById("modalPrescripcion");
 
-            if (btnPrescripcion && modalElement) {
-                btnPrescripcion.addEventListener("click", function (e) {
-                    // Verificación manual: Si los atributos nativos fallan por falta de bundle, JS levanta el Modal
-                    if (!modalElement.classList.contains('show')) {
-                        try {
-                            var bootstrapModal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-                            bootstrapModal.show();
-                        } catch (err) {
-                            console.warn("Bootstrap JS no está completamente cargado. Detalles:", err);
-                        }
-                    }
+            const btn = document.getElementById("btnAbrirPrescripcion");
+
+            if (btn && modalElement) {
+                btn.addEventListener("click", function () {
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                    modal.show();
                 });
             }
         });

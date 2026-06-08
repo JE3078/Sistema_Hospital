@@ -1,116 +1,228 @@
 ﻿@model Sistema_Hospital.Models.ViewModels.EnfermeroEditarVM
 
 @{
-    ViewData["Title"] = "Modificar Perfil de Enfermería";
+    ViewData["Title"] = "Editar Enfermero";
 }
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-11">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-warning text-dark py-3">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Modificar Expediente del Enfermero(a): @Model.Nombre @Model.Apellido</h5>
+<div class="container-fluid">
+
+    <!-- HEADER -->
+    <div class="row align-items-center mb-4">
+
+        <div class="col-md-8">
+
+            <h2 class="fw-bold text-warning mb-1">
+                <i class="bi bi-pencil-square me-2"></i>
+                Edición de Expediente Clínico
+            </h2>
+
+            <p class="text-muted mb-0">
+                Actualización de información del personal de enfermería
+            </p>
+
+        </div>
+
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary shadow-sm">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-lg">
+
+        <!-- HEADER CARD -->
+        <div class="card-header bg-warning text-dark py-3">
+
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-person-vcard me-2"></i>
+                Enfermero(a): @Model.Nombre @Model.Apellido
+            </h5>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger border-0 shadow-sm mb-4">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    @ViewBag.Error
                 </div>
+            }
 
-                <div class="card-body p-4">
-                    @if (ViewBag.Error != null)
-                    {
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    }
+            <form asp-action="Editar" asp-controller="Enfermero" method="post">
 
-                    <form asp-action="Editar" asp-controller="Enfermero" method="post">
-                        <input type="hidden" asp-for="IdEnfermero" />
+                <input type="hidden" asp-for="IdEnfermero" />
+
+                <div class="row">
+
+                    <!-- IZQUIERDA -->
+                    <div class="col-md-6 border-end">
+
+                        <h6 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-person-lines-fill me-2 text-warning"></i>
+                            Información Personal
+                        </h6>
 
                         <div class="row">
 
-                            <div class="col-md-6 border-end">
-                                <h6 class="text-dark mb-3 fw-bold">
-                                    <i class="bi bi-file-earmark-medical me-2"></i>Información del Colaborador
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nombre" class="form-label fw-semibold">Nombres</label>
+                                <input asp-for="Nombre" class="form-control" />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Apellido" class="form-label fw-semibold">Apellidos</label>
+                                <input asp-for="Apellido" class="form-control" />
+                                <span asp-validation-for="Apellido" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DPI" class="form-label fw-semibold">DPI</label>
+                                <input asp-for="DPI"
+                                       class="form-control"
+                                       maxlength="13" />
+                                <span asp-validation-for="DPI" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefono" class="form-label fw-semibold">Teléfono</label>
+                                <input asp-for="Telefono"
+                                       class="form-control"
+                                       maxlength="8" />
+                                <span asp-validation-for="Telefono" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label fw-semibold">Correo</label>
+                            <input asp-for="Correo" type="email" class="form-control" />
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="IdGenero" class="form-label fw-semibold">Género</label>
+                            <select asp-for="IdGenero"
+                                    asp-items="Model.Generos"
+                                    class="form-select"></select>
+                            <span asp-validation-for="IdGenero" class="text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <!-- DERECHA -->
+                    <div class="col-md-6 ps-md-4">
+
+                        <h6 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-shield-lock me-2 text-warning"></i>
+                            Seguridad de Cuenta
+                        </h6>
+
+                        <!-- USERNAME -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Usuario (No modificable)</label>
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock-fill"></i>
+                                </span>
+
+                                <input class="form-control bg-light"
+                                       value="@Model.Username"
+                                       disabled />
+
+                                <input type="hidden" asp-for="Username" />
+                            </div>
+
+                        </div>
+
+                        <!-- PASSWORD -->
+                        <div class="mb-3">
+                            <label asp-for="NuevaPassword" class="form-label fw-semibold">
+                                Nueva contraseña (Opcional)
+                            </label>
+
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-key"></i>
+                                </span>
+
+                                <input type="password"
+                                       asp-for="NuevaPassword"
+                                       class="form-control"
+                                       placeholder="Dejar vacío para mantener actual" />
+                            </div>
+
+                            <span asp-validation-for="NuevaPassword" class="text-danger"></span>
+                        </div>
+
+                        <!-- INFO -->
+                        <div class="card border-0 bg-light mt-4">
+
+                            <div class="card-body">
+
+                                <h6 class="fw-bold text-warning mb-2">
+                                    <i class="bi bi-shield-exclamation me-1"></i>
+                                    Auditoría del Sistema
                                 </h6>
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label asp-for="Nombre" class="form-label text-muted fw-semibold">Nombres</label>
-                                        <input asp-for="Nombre" class="form-control" required />
-                                        <span asp-validation-for="Nombre" class="text-danger small"></span>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label asp-for="Apellido" class="form-label text-muted fw-semibold">Apellidos</label>
-                                        <input asp-for="Apellido" class="form-control" required />
-                                        <span asp-validation-for="Apellido" class="text-danger small"></span>
-                                    </div>
-                                </div>
+                                <p class="small text-muted mb-0">
 
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label asp-for="DPI" class="form-label text-muted fw-semibold">Número de DPI</label>
-                                        <input asp-for="DPI" class="form-control" maxlength="13" required />
-                                        <span asp-validation-for="DPI" class="text-danger small"></span>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label asp-for="Telefono" class="form-label text-muted fw-semibold">Teléfono</label>
-                                        <input asp-for="Telefono" class="form-control" maxlength="8" required />
-                                        <span asp-validation-for="Telefono" class="text-danger small"></span>
-                                    </div>
-                                </div>
+                                    Todo cambio en este expediente será registrado automáticamente
+                                    en el sistema de auditoría hospitalaria.
 
-                                <div class="mb-3">
-                                    <label asp-for="Correo" class="form-label text-muted fw-semibold">Correo Electrónico</label>
-                                    <input asp-for="Correo" class="form-control" type="email" required />
-                                    <span asp-validation-for="Correo" class="text-danger small"></span>
-                                </div>
+                                </p>
 
-                                <div class="mb-3">
-                                    <label asp-for="IdGenero" class="form-label text-muted fw-semibold">Género</label>
-                                    <select asp-for="IdGenero" asp-items="Model.Generos" class="form-select" required></select>
-                                    <span asp-validation-for="IdGenero" class="text-danger small"></span>
-                                </div>
                             </div>
 
-                            <div class="col-md-6 ps-4">
-                                <h6 class="text-dark mb-3 fw-bold"><i class="bi bi-shield-lock me-2"></i>Seguridad de la Cuenta</h6>
-
-                                <div class="mb-3">
-                                    <label class="form-label text-muted fw-semibold">Nombre de Usuario (Inmutable)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-lock-fill"></i></span>
-                                        <input class="form-control bg-light" value="@@@Model.Username" disabled />
-                                        <input type="hidden" asp-for="Username" />
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label asp-for="NuevaPassword" class="form-label text-muted fw-semibold">Cambiar Contraseña (Opcional)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light text-muted"><i class="bi bi-key"></i></span>
-                                        <input type="password" asp-for="NuevaPassword" class="form-control" placeholder="Dejar en blanco para no modificar" />
-                                    </div>
-                                    <span asp-validation-for="NuevaPassword" class="text-danger small"></span>
-                                </div>
-
-                                <div class="alert alert-warning mt-4 border-0 bg-light text-dark small">
-                                    <i class="bi bi-info-circle-fill text-warning me-2 fs-5"></i>
-                                    <strong>Directiva de Seguridad:</strong> Dejar el campo de contraseña vacío conservará las credenciales actuales del enfermero(a). Cualquier actualización de este expediente generará un log inmediato en el sistema de auditoría.
-                                </div>
-                            </div>
                         </div>
 
-                        <hr class="my-4" />
+                    </div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <a asp-action="Index" class="btn btn-light border">Regresar al Listado</a>
-                            <button type="submit" class="btn btn-warning px-5 shadow-sm fw-semibold">
-                                <i class="bi bi-check-circle me-2"></i>Actualizar Cambios
-                            </button>
-                        </div>
-                    </form>
                 </div>
-            </div>
+
+                <!-- BOTONES -->
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+
+                        Cancelar
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-warning shadow-sm px-4 fw-semibold">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Actualizar
+
+                    </button>
+
+                </div>
+
+            </form>
+
         </div>
+
     </div>
+
 </div>
 
 @section Scripts {

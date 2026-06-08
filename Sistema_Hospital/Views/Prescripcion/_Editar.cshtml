@@ -1,60 +1,115 @@
 ﻿@model Sistema_Hospital.Models.ViewModels.PrescripcionEditarVM
 
-<div class="modal fade" id="modalPrescripcion" tabindex="-1" aria-labelledby="modalPrescripcionLabel">
+<div class="modal fade"
+     id="modalPrescripcion"
+     tabindex="-1"
+     aria-labelledby="modalPrescripcionLabel">
+
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-info text-white">
+
+        <div class="modal-content border-0 shadow-lg">
+
+            <!-- HEADER -->
+            <div class="modal-header bg-primary text-white">
+
                 <h5 class="modal-title" id="modalPrescripcionLabel">
-                    <i class="fas fa-pills"></i> Modificar Receta Médica
+                    <i class="bi bi-capsule-pill me-2"></i>
+                    Editar Prescripción
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+
             </div>
-            <div class="modal-body">
 
-                <input type="hidden" name="Prescripcion.IdPrescripcion" value="@Model.IdPrescripcion" />
-                <input type="hidden" name="Prescripcion.IdDiagnostico" value="@Model.IdDiagnostico" />
+            <!-- BODY -->
+            <div class="modal-body p-4">
 
-                <div class="form-group mb-3">
-                    <label asp-for="IdMedicamento" class="form-label font-weight-bold">Medicamento</label>
+                <input type="hidden"
+                       name="Prescripcion.IdPrescripcion"
+                       value="@Model.IdPrescripcion" />
+
+                <input type="hidden"
+                       name="Prescripcion.IdDiagnostico"
+                       value="@Model.IdDiagnostico" />
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">Medicamento</label>
+
                     <select asp-for="IdMedicamento"
-                            class="form-control form-select"
-                            asp-items="Model.Medicamentos">
-                        <option value="">-- Seleccione Medicamento --</option>
-                    </select>
-                    <span asp-validation-for="IdMedicamento" class="text-danger"></span>
+                            name="Prescripcion.IdMedicamento"
+                            class="form-select"
+                            asp-items="Model.Medicamentos"></select>
+
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4 form-group mb-3">
-                        <label asp-for="Dosis" class="form-label font-weight-bold">Dosis</label>
-                        <input name="Prescripcion.Dosis" value="@Model.Dosis" class="form-control" />
-                        <span asp-validation-for="Dosis" class="text-danger"></span>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Dosis</label>
+                        <input name="Prescripcion.Dosis"
+                               value="@Model.Dosis"
+                               class="form-control" />
                     </div>
-                    <div class="col-md-4 form-group mb-3">
-                        <label asp-for="Frecuencia" class="form-label font-weight-bold">Frecuencia</label>
-                        <input name="Prescripcion.Frecuencia" value="@Model.Frecuencia" class="form-control" />
-                        <span asp-validation-for="Frecuencia" class="text-danger"></span>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Frecuencia</label>
+                        <input name="Prescripcion.Frecuencia"
+                               value="@Model.Frecuencia"
+                               class="form-control" />
                     </div>
-                    <div class="col-md-4 form-group mb-3">
-                        <label asp-for="Duracion" class="form-label font-weight-bold">Duración</label>
-                        <input name="Prescripcion.Duracion" value="@Model.Duracion" class="form-control" />
-                        <span asp-validation-for="Duracion" class="text-danger"></span>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label fw-semibold">Duración</label>
+                        <input name="Prescripcion.Duracion"
+                               value="@Model.Duracion"
+                               class="form-control" />
                     </div>
+
                 </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Instrucciones" class="form-label font-weight-bold">Instrucciones Adicionales</label>
-                    <textarea name="Prescripcion.Instrucciones" class="form-control" rows="3">@Model.Instrucciones</textarea>
-                    <span asp-validation-for="Instrucciones" class="text-danger"></span>
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Instrucciones
+                    </label>
+
+                    <textarea name="Prescripcion.Instrucciones"
+                              class="form-control"
+                              rows="3">@Model.Instrucciones</textarea>
+
                 </div>
 
             </div>
+
+            <!-- FOOTER -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="btnAceptarPrescripcion">
-                    <i class="fas fa-save"></i> Guardar Cambios de Receta
+
+                <button type="button"
+                        class="btn btn-success"
+                        data-bs-dismiss="modal"
+                        id="btnAceptarPrescripcion">
+
+                    <i class="bi bi-check-circle me-1"></i>
+                    Guardar
+
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCancelarPrescripcion">Cerrar</button>
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal"
+                        id="btnCancelarPrescripcion">
+
+                    Cerrar
+
+                </button>
+
             </div>
+
         </div>
+
     </div>
+
 </div>

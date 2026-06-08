@@ -8,51 +8,75 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-sm border-0">
+
+                <!-- HEADER -->
                 <div class="card-header bg-warning text-dark py-3">
-                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Modificar Usuario</h5>
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Modificar Usuario
+                    </h5>
                 </div>
+
                 <div class="card-body p-4">
+
                     @if (ViewBag.Error != null)
                     {
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.Error
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            @ViewBag.Error
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     }
 
                     <form asp-action="Editar" asp-controller="Usuario" method="post">
 
-                        <!-- Clave primaria oculta indispensable para el WHERE de Entity Framework -->
+                        <!-- ID -->
                         <input type="hidden" asp-for="IdUsuario" />
 
-                        <!-- Campo: Nombre de Usuario -->
+                        <!-- Username -->
                         <div class="mb-3">
-                            <label asp-for="Username" class="form-label text-muted fw-semibold">Nombre de Usuario</label>
+                            <label asp-for="Username" class="form-label text-muted fw-semibold">
+                                Nombre de Usuario
+                            </label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+                                <span class="input-group-text bg-light text-muted">
+                                    <i class="bi bi-person"></i>
+                                </span>
                                 <input asp-for="Username" class="form-control" required />
                             </div>
                             <span asp-validation-for="Username" class="text-danger small"></span>
                         </div>
 
-                        <!-- Campo: Nueva Contraseña (Opcional) -->
+                        <!-- Password opcional -->
                         <div class="mb-3">
-                            <label asp-for="NuevoPassword" class="form-label text-muted fw-semibold">Cambiar Contraseña</label>
+                            <label asp-for="NuevoPassword" class="form-label text-muted fw-semibold">
+                                Cambiar Contraseña (Opcional)
+                            </label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted"><i class="bi bi-key"></i></span>
-                                <input asp-for="NuevoPassword" class="form-control" placeholder="Dejar en blanco para mantener la actual" />
+                                <span class="input-group-text bg-light text-muted">
+                                    <i class="bi bi-key"></i>
+                                </span>
+                                <input asp-for="NuevoPassword" type="password"
+                                       class="form-control"
+                                       placeholder="Dejar vacío para mantener la actual" />
                             </div>
                             <span asp-validation-for="NuevoPassword" class="text-danger small"></span>
+
                             <small class="text-muted d-block mt-1">
-                                <i class="bi bi-info-circle me-1"></i>Solo escribe texto aquí si necesitas resetear o asignar una nueva clave.
+                                <i class="bi bi-info-circle me-1"></i>
+                                Solo escribe si deseas cambiar la contraseña.
                             </small>
                         </div>
 
-                        <!-- Campo: Selección de Rol (Dropdown Dinámico) -->
+                        <!-- Rol -->
                         <div class="mb-3">
-                            <label asp-for="IdRol" class="form-label text-muted fw-semibold">Rol de Acceso</label>
+                            <label asp-for="IdRol" class="form-label text-muted fw-semibold">
+                                Rol de Acceso
+                            </label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted"><i class="bi bi-shield-lock"></i></span>
+                                <span class="input-group-text bg-light text-muted">
+                                    <i class="bi bi-shield-lock"></i>
+                                </span>
                                 <select asp-for="IdRol" asp-items="Model.Roles" class="form-select" required>
                                     <option value="">-- Seleccione un Rol --</option>
                                 </select>
@@ -60,27 +84,36 @@
                             <span asp-validation-for="IdRol" class="text-danger small"></span>
                         </div>
 
-                        <!-- Campo: Estado de la Cuenta -->
+                        <!-- Estado -->
                         <div class="mb-4">
-                            <label asp-for="Estado" class="form-label text-muted fw-semibold">Estado de la cuenta</label>
+                            <label asp-for="Estado" class="form-label text-muted fw-semibold">
+                                Estado de la cuenta
+                            </label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light text-muted"><i class="bi bi-toggle-on"></i></span>
+                                <span class="input-group-text bg-light text-muted">
+                                    <i class="bi bi-toggle-on"></i>
+                                </span>
                                 <select asp-for="Estado" class="form-select">
-                                    <option value="true">Activo / Habilitar Acceso</option>
-                                    <option value="false">Inactivo / Suspender Cuenta</option>
+                                    <option value="true">Activo</option>
+                                    <option value="false">Inactivo</option>
                                 </select>
                             </div>
                             <span asp-validation-for="Estado" class="text-danger small"></span>
                         </div>
 
-                        <!-- Botones de Acción -->
+                        <!-- BOTONES -->
                         <div class="d-flex justify-content-end gap-2">
-                            <a asp-action="Index" class="btn btn-light border">Cancelar</a>
+                            <a asp-action="Index" class="btn btn-light border">
+                                Cancelar
+                            </a>
                             <button type="submit" class="btn btn-warning px-4 fw-semibold shadow-sm">
-                                <i class="bi bi-check-circle me-2"></i>Actualizar Cambios
+                                <i class="bi bi-check-circle me-2"></i>
+                                Actualizar
                             </button>
                         </div>
+
                     </form>
+
                 </div>
             </div>
         </div>

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sistema_Hospital.Servicios;
 
 namespace Sistema_Hospital.Controllers
 {
+    [Authorize(Roles = "1,2,3")]
+
     public class CargaMasivaPacienteController : Controller
     {
         private readonly ICargaMasivaPacienteService _cargaService;
